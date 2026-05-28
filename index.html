@@ -410,6 +410,7 @@ function minutesToTime(mins){
   const nextDay=totalMins>=24*60;
   const h=Math.floor(totalMins/60)%24,m=totalMins%60;
   const ap=h<12?'AM':'PM',hh=h%12||12;
+  if(hh===12&&m===0) return ap==='AM'?`12 Midnight${nextDay?' (+1 day)':''}`:'12 Noon';
   return `${hh}:${m.toString().padStart(2,'0')} ${ap}${nextDay?' (+1 day)':''}`;
 }
 function getZone(lat,lon){
@@ -847,40 +848,73 @@ function parseCSV(file,name){
     const weightCol=headers.findIndex(h=>h.includes('weight'));
     if(nameCol<0||weightCol<0){alert('File must have "outlet name" and "weight" columns');return;}
     parsedOrders=[];
+    const excluded=[];
     const tbody=document.getElementById('preview-body');
     tbody.innerHTML='';
-    let matched=0,unmatched=0;
+    let matched=0,unmatched=0,totalUploadedW=0,matchedW=0;
     for(let i=1;i<data.length;i++){
       const row=data[i];
       const outletName=String(row[nameCol]||'').trim();
-      const weight=parseFloat(row[weightCol]);
-      if(!outletName||isNaN(weight)||weight<=0) continue;
+      const rawW=row[weightCol];
+      const weight=parseFloat(rawW);
+      if(!outletName){excluded.push({name:'(blank row)',weight:'-',reason:'Empty outlet name'});continue;}
+      if(isNaN(weight)||weight<=0){excluded.push({name:outletName,weight:rawW||'-',reason:'Invalid or zero weight'});continue;}
+      totalUploadedW+=weight;
       const masterMatch=fuzzyMatch(outletName);
       const dist=masterMatch?Math.round(haversine(WH.lat,WH.lon,masterMatch.lat,masterMatch.lon)):null;
       const zone=masterMatch?getZone(masterMatch.lat,masterMatch.lon):'-';
-      const tr=document.createElement('tr');
-      if(!masterMatch) tr.className='unmatched';
-      tr.innerHTML=`
-        <td>${outletName}</td>
-        <td class="${masterMatch?'match-ok':'match-fail'}">${masterMatch?masterMatch.name:'⚠ No match found'}</td>
-        <td>${weight.toFixed(2)} kg</td>
-        <td>${masterMatch?masterMatch.eta:'-'}</td>
-        <td><span class="badge ${zone==='Outstation'?'badge-outstation':'badge-ncr'}">${zone}</span></td>
-        <td>${dist?dist+' km':'-'}</td>`;
-      tbody.appendChild(tr);
-      if(masterMatch){matched++;parsedOrders.push({...masterMatch,weight,uploadedName:outletName});}
-      else unmatched++;
+      if(!masterMatch){
+        unmatched++;
+        excluded.push({name:outletName,weight,reason:'No matching outlet in master data'});
+      } else {
+        const tr=document.createElement('tr');
+        tr.innerHTML=`
+          <td>${outletName}</td>
+          <td class="match-ok">${masterMatch.name}</td>
+          <td>${weight.toFixed(2)} kg</td>
+          <td>${masterMatch.eta}</td>
+          <td><span class="badge ${zone==='Outstation'?'badge-outstation':'badge-ncr'}">${zone}</span></td>
+          <td>${dist?dist+' km':'-'}</td>`;
+        tbody.appendChild(tr);
+        matched++;matchedW+=weight;
+        parsedOrders.push({...masterMatch,weight,uploadedName:outletName});
+      }
     }
     document.getElementById('upload-result').style.display='block';
     document.getElementById('match-summary').textContent=`${matched} matched, ${unmatched} unmatched`;
-    const totalW=parsedOrders.reduce((s,o)=>s+o.weight,0);
+    renderExcludedSection(excluded);
+    const weightNote=totalUploadedW>matchedW?`<div style="font-size:10px;color:var(--text-muted);margin-top:2px">of ${totalUploadedW.toFixed(2)} kg uploaded</div>`:'';
     document.getElementById('upload-stats').innerHTML=`
       <div class="stat"><div class="stat-label">Total orders</div><div class="stat-value">${matched+unmatched}</div></div>
       <div class="stat"><div class="stat-label">Matched</div><div class="stat-value" style="color:var(--green)">${matched}</div></div>
-      <div class="stat"><div class="stat-label">Unmatched</div><div class="stat-value" style="color:${unmatched?'var(--red)':'var(--green)'}">${unmatched}</div></div>
-      <div class="stat"><div class="stat-label">Total weight</div><div class="stat-value">${totalW.toFixed(2)} kg</div></div>`;
+      <div class="stat"><div class="stat-label">Excluded</div><div class="stat-value" style="color:${excluded.length?'var(--red)':'var(--green)'}">${excluded.length}</div></div>
+      <div class="stat"><div class="stat-label">Matched weight</div><div class="stat-value">${matchedW.toFixed(2)} kg${weightNote}</div></div>`;
   };
   reader.readAsArrayBuffer(file);
+}
+
+function renderExcludedSection(excluded){
+  let el=document.getElementById('excluded-section');
+  if(!el){
+    el=document.createElement('div');
+    el.id='excluded-section';
+    el.style.marginBottom='16px';
+    document.getElementById('upload-result').appendChild(el);
+  }
+  if(!excluded.length){el.innerHTML='';return;}
+  el.innerHTML=`
+    <div class="card">
+      <div class="section-header" style="margin-bottom:10px">
+        <div class="section-title" style="font-size:14px;color:var(--red)">⚠ Excluded from Routing (${excluded.length})</div>
+        <span style="font-size:11px;color:var(--text-muted)">These rows were not routed. Fix and re-upload to include them.</span>
+      </div>
+      <div class="scroll-x">
+        <table class="preview-table">
+          <thead><tr><th>Outlet Name (from order)</th><th>Weight</th><th>Reason Excluded</th></tr></thead>
+          <tbody>${excluded.map(e=>`<tr><td>${e.name}</td><td>${typeof e.weight==='number'?e.weight.toFixed(2)+' kg':e.weight}</td><td class="match-fail">${e.reason}</td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
 }
 
 function generateRoutes(){
@@ -927,17 +961,18 @@ function renderRouteCards(){
   if(fc) filtered=filtered.filter(r=>r.hasConflict);
   const grid=document.getElementById('routes-grid');
   grid.innerHTML='';
-  filtered.forEach((r,i)=>{
+  filtered.forEach((r)=>{
+    const routeNum=generatedRoutes.indexOf(r)+1;
     const div=document.createElement('div');
     div.className='route-card';
-    div.onclick=()=>openRouteModal(r,i);
+    div.onclick=()=>openRouteModal(r,routeNum-1);
     const zoneStr=r.zones.join(', ');
     const hours=Math.floor(r.totalRouteMins/60),mins=r.totalRouteMins%60;
     const isOvertime=r.totalRouteMins>s.maxHours*60;
     const durationStyle=isOvertime?'color:var(--amber);font-weight:600':'';
     div.innerHTML=`
       <div class="route-card-header">
-        <div class="route-number">Route ${i+1}</div>
+        <div class="route-number">Route ${routeNum}</div>
         <div style="display:flex;gap:6px;align-items:center">
           ${r.isOutstation?'<span class="badge badge-outstation">Outstation</span>':''}
           ${isOvertime?'<span class="badge" style="background:#fef3c7;color:#92400e">⚡OT</span>':''}
@@ -1085,6 +1120,7 @@ function populateOpsTable(){
   document.getElementById('ops-table-wrap').style.display='block';
   generatedRoutes.forEach((r,i)=>{
     const tr=document.createElement('tr');
+    tr.id=`ops-main-row-${i}`;
     tr.innerHTML=`
       <td style="font-weight:500">Route ${i+1}<br><span style="font-size:10px;color:var(--text-muted)">${r.stops.length} stops · ${r.totalWeight}kg</span></td>
       <td><span class="vehicle-badge ${vehicleBadgeClass(r.vehicle)}">${r.vehicle}</span></td>
@@ -1095,11 +1131,11 @@ function populateOpsTable(){
           <option>TATA 407</option><option>14FT</option><option>Other</option>
         </select>
       </td>
-      <td><input type="number" min="1" max="9" value="1" id="ops-numv-${i}" style="width:60px;text-align:center"/></td>
-      <td><input type="text" placeholder="e.g. DL01AB1234" id="ops-vno-${i}"/></td>
-      <td><input type="text" placeholder="Driver name" id="ops-dname-${i}"/></td>
-      <td><input type="text" placeholder="+91 XXXXXXXX" id="ops-dnum-${i}"/></td>
-      <td><input type="text" placeholder="Partner name" id="ops-tp-${i}"/></td>
+      <td><input type="number" min="1" max="9" value="1" id="ops-numv-${i}" style="width:60px;text-align:center" oninput="updateExtraVehicleRows(${i},+this.value)"/></td>
+      <td><input type="text" placeholder="e.g. DL01AB1234" id="ops-vno-${i}-1"/></td>
+      <td><input type="text" placeholder="Driver name" id="ops-dname-${i}-1"/></td>
+      <td><input type="tel" placeholder="10-digit mobile" maxlength="10" id="ops-dnum-${i}-1" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"/></td>
+      <td><input type="text" placeholder="Partner name" id="ops-tp-${i}-1"/></td>
       <td style="font-weight:500;color:var(--green)">${r.dispatchTime}</td>
       <td><input type="time" id="ops-adispatch-${i}"/></td>
       <td><input type="time" id="ops-return-${i}"/></td>
@@ -1108,18 +1144,44 @@ function populateOpsTable(){
   });
 }
 
+function updateExtraVehicleRows(routeIdx,count){
+  document.querySelectorAll(`[data-extra-v="${routeIdx}"]`).forEach(r=>r.remove());
+  const anchor=document.getElementById(`ops-main-row-${routeIdx}`);
+  if(!anchor) return;
+  for(let v=2;v<=Math.min(count,9);v++){
+    const tr=document.createElement('tr');
+    tr.setAttribute('data-extra-v',routeIdx);
+    tr.style.background='var(--gray-light)';
+    tr.innerHTML=`
+      <td colspan="3" style="font-size:11px;color:var(--text-muted);padding-left:20px;border-right:none">Vehicle ${v}</td>
+      <td style="border-left:none"></td>
+      <td><input type="text" placeholder="e.g. DL01AB1234" id="ops-vno-${routeIdx}-${v}"/></td>
+      <td><input type="text" placeholder="Driver name" id="ops-dname-${routeIdx}-${v}"/></td>
+      <td><input type="tel" placeholder="10-digit mobile" maxlength="10" id="ops-dnum-${routeIdx}-${v}" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"/></td>
+      <td><input type="text" placeholder="Partner name" id="ops-tp-${routeIdx}-${v}"/></td>
+      <td colspan="4"></td>`;
+    // Insert after last extra row (or after main row)
+    const allExtra=document.querySelectorAll(`[data-extra-v="${routeIdx}"]`);
+    const insertAfter=allExtra.length>0?allExtra[allExtra.length-1]:anchor;
+    insertAfter.insertAdjacentElement('afterend',tr);
+  }
+}
+
 // ═══════════════════════════════════════════════
 //  EXCEL EXPORT
 // ═══════════════════════════════════════════════
 function exportExcel(){
   if(!generatedRoutes.length){alert('No routes to export');return;}
   const s=getSettings();
-  const rows=[['Route','Vehicle','Stop #','Outlet Name','Zone','Weight (kg)','ETA','Est. Arrival','Est. Depart','Dist from prev (km)','Total Route Weight','Total Distance (km)','Dispatch Time','Return Time','No-Entry Conflict']];
+  const today=new Date();
+  const dateStr=today.toLocaleDateString('en-GB'); // DD/MM/YYYY
+  const fileDateStr=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const rows=[['Date','Warehouse','Route','Vehicle','Stop #','Outlet Name','Zone','Weight (kg)','ETA','Est. Arrival','Est. Depart','Dist from prev (km)','Total Route Weight','Total Distance (km)','Dispatch Time','Return Time','No-Entry Conflict']];
   generatedRoutes.forEach((r,i)=>{
     r.stops.forEach((stop,j)=>{
       const departTime=minutesToTime(stop.arrivalMins+s.unloadingMin);
       rows.push([
-        `Route ${i+1}`,r.vehicle,j+1,stop.name,
+        dateStr,'UH-Rai',`Route ${i+1}`,r.vehicle,j+1,stop.name,
         stop.zone||getZone(stop.lat,stop.lon),stop.weight,stop.eta,stop.arrivalTime,departTime,stop.dist||'',
         j===0?r.totalWeight:'',j===0?r.totalDistKm:'',
         j===0?r.dispatchTime:'',j===0?r.returnTime:'',
@@ -1130,26 +1192,29 @@ function exportExcel(){
   });
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:10},{wch:10},{wch:7},{wch:45},{wch:12},{wch:12},{wch:14},{wch:12},{wch:12},{wch:16},{wch:18},{wch:18},{wch:14},{wch:12},{wch:16}];
+  ws['!cols']=[{wch:12},{wch:12},{wch:10},{wch:10},{wch:7},{wch:45},{wch:12},{wch:12},{wch:14},{wch:12},{wch:12},{wch:16},{wch:18},{wch:18},{wch:14},{wch:12},{wch:16}];
   XLSX.utils.book_append_sheet(wb,ws,'Routes');
-  XLSX.writeFile(wb,'UrbanHarvest_Routes.xlsx');
+  XLSX.writeFile(wb,`UrbanHarvest_Routes_${fileDateStr}.xlsx`);
   showToast('Excel exported!');
 }
 
 function exportOpsExcel(){
   if(!generatedRoutes.length){alert('No operations data');return;}
-  const rows=[['Route','Stops','Weight (kg)','Planned Vehicle','Actual Vehicle Type','No. of Vehicles','Vehicle No.','Driver Name','Driver No.','Transport Partner','Planned Dispatch','Actual Dispatch','Return Time','Notes']];
+  const today=new Date();
+  const dateStr=today.toLocaleDateString('en-GB'); // DD/MM/YYYY
+  const fileDateStr=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const rows=[['Date','Route','Stops','Weight (kg)','Planned Vehicle','Actual Vehicle Type','No. of Vehicles','Vehicle No.','Driver Name','Driver No.','Transport Partner','Planned Dispatch','Actual Dispatch','Return Time','Notes']];
   generatedRoutes.forEach((r,i)=>{
     const avtypeEl=document.getElementById(`ops-avtype-${i}`);
     const avtypeVal=avtypeEl?.value||'';
     rows.push([
-      `Route ${i+1}`,r.stops.length,r.totalWeight,r.vehicle,
+      dateStr,`Route ${i+1}`,r.stops.length,r.totalWeight,r.vehicle,
       avtypeVal||r.vehicle,
       parseInt(document.getElementById(`ops-numv-${i}`)?.value||'1'),
-      document.getElementById(`ops-vno-${i}`)?.value||'',
-      document.getElementById(`ops-dname-${i}`)?.value||'',
-      document.getElementById(`ops-dnum-${i}`)?.value||'',
-      document.getElementById(`ops-tp-${i}`)?.value||'',
+      document.getElementById(`ops-vno-${i}-1`)?.value||'',
+      document.getElementById(`ops-dname-${i}-1`)?.value||'',
+      document.getElementById(`ops-dnum-${i}-1`)?.value||'',
+      document.getElementById(`ops-tp-${i}-1`)?.value||'',
       r.dispatchTime,
       document.getElementById(`ops-adispatch-${i}`)?.value||'',
       document.getElementById(`ops-return-${i}`)?.value||'',
@@ -1158,9 +1223,9 @@ function exportOpsExcel(){
   });
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:10},{wch:7},{wch:12},{wch:16},{wch:18},{wch:14},{wch:16},{wch:18},{wch:16},{wch:18},{wch:16},{wch:16},{wch:14},{wch:30}];
+  ws['!cols']=[{wch:12},{wch:10},{wch:7},{wch:12},{wch:16},{wch:18},{wch:14},{wch:16},{wch:18},{wch:16},{wch:18},{wch:16},{wch:16},{wch:14},{wch:30}];
   XLSX.utils.book_append_sheet(wb,ws,'Operations');
-  XLSX.writeFile(wb,'UrbanHarvest_Ops.xlsx');
+  XLSX.writeFile(wb,`UrbanHarvest_Ops_${fileDateStr}.xlsx`);
   showToast('Ops log exported!');
 }
 
