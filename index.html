@@ -231,7 +231,7 @@ input[type=file]{display:none}
         <option>Faridabad</option><option>Outstation</option>
       </select>
       <label style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:4px">
-        <input type="checkbox" id="filter-conflict" onchange="renderRouteCards()"> Show conflicts only
+        <input type="checkbox" id="filter-conflict" onchange="renderRouteCards()"> Show conflicts &amp; late arrivals only
       </label>
     </div>
     <div class="routes-grid" id="routes-grid"></div>
@@ -397,9 +397,9 @@ function haversine(lat1,lon1,lat2,lon2){
   return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 function etaToMinutes(etaStr){
-  if(!etaStr||etaStr==='As per customer') return 23*60+59;
+  if(!etaStr||etaStr==='As per customer') return Infinity;
   const m=etaStr.match(/(\d+):(\d+):\d+\s*(AM|PM)/i);
-  if(!m) return 23*60+59;
+  if(!m) return Infinity;
   let h=parseInt(m[1]),min=parseInt(m[2]),ap=m[3].toUpperCase();
   if(ap==='PM'&&h!==12) h+=12;
   if(ap==='AM'&&h===12) h=0;
@@ -712,10 +712,10 @@ function buildRouteFromCluster(cluster,s,isOutstation){
       }
       const arr=Math.round(cum);
       const etaMins=etaToMinutes(o.eta);
-      const late=arr>etaMins&&etaMins<23*60;
+      const late=arr>etaMins&&isFinite(etaMins);
       if(late) lateCount++;
-      // Earliness: minutes before ETA (skip "As per customer" ETAs = 23:59)
-      if(!late&&etaMins<23*60) totalEarlyMins+=Math.max(0,etaMins-arr);
+      // Earliness: minutes before ETA (skip "As per customer" which have no deadline)
+      if(!late&&isFinite(etaMins)) totalEarlyMins+=Math.max(0,etaMins-arr);
       cum+=s.unloadingMin;
       pl=o.lat;plo=o.lon;
       return{...o,arrivalMins:arr,arrivalTime:minutesToTime(arr),conflict,late,stopNum:i+1,dist:Math.round(dist*10)/10,zone};
@@ -737,6 +737,7 @@ function buildRouteFromCluster(cluster,s,isOutstation){
   const dispatchMins=best.dispMins;
   const stopsWithTime=best.stops;
   const hasConflict=stopsWithTime.some(s=>s.conflict);
+  const hasLate=stopsWithTime.some(s=>s.late);
 
   const lastStop=stopsWithTime[stopsWithTime.length-1];
   const lastArrival=lastStop.arrivalMins+s.unloadingMin;
@@ -757,6 +758,7 @@ function buildRouteFromCluster(cluster,s,isOutstation){
     returnTime:minutesToTime(Math.round(returnMins)),
     totalRouteMins:Math.round(totalRouteMins),
     hasConflict,
+    hasLate,
     zones
   };
 }
@@ -790,7 +792,7 @@ function nearestNeighbourFrom(stops,startLat,startLon){
 function etaSortedNeighbour(stops){
   function bucket(stop){
     const eta=etaToMinutes(stop.eta);
-    if(eta>=23*60+59) return 3; // "As per customer" → last
+    if(!isFinite(eta)) return 3; // "As per customer" → last
     if(eta<12*60)     return 0; // morning  : before noon
     if(eta<17*60)     return 1; // afternoon: noon–5 PM
     return 2;                    // evening  : after 5 PM
@@ -935,11 +937,12 @@ function renderRoutesPage(){
   const totalW=generatedRoutes.reduce((s,r)=>s+r.totalWeight,0);
   const outst=generatedRoutes.filter(r=>r.isOutstation).length;
   const conflicts=generatedRoutes.filter(r=>r.hasConflict).length;
+  const lateRoutes=generatedRoutes.filter(r=>r.hasLate).length;
   document.getElementById('route-summary-stats').innerHTML=`
     <div class="stat"><div class="stat-label">Total routes</div><div class="stat-value">${generatedRoutes.length}</div></div>
     <div class="stat"><div class="stat-label">Total stops</div><div class="stat-value">${total}</div></div>
     <div class="stat"><div class="stat-label">Total weight</div><div class="stat-value">${totalW.toFixed(2)} kg</div></div>
-    <div class="stat"><div class="stat-label">Outstation routes</div><div class="stat-value" style="color:${outst?'var(--amber)':'var(--green)'}">${outst}</div>${conflicts?`<div class="stat-sub">${conflicts} with scheduling conflicts</div>`:''}`;
+    <div class="stat"><div class="stat-label">Outstation routes</div><div class="stat-value" style="color:${outst?'var(--amber)':'var(--green)'}">${outst}</div>${conflicts?`<div class="stat-sub" style="color:var(--amber)">⚠ ${conflicts} scheduling conflict${conflicts>1?'s':''}</div>`:''}${lateRoutes?`<div class="stat-sub" style="color:var(--red)">⚠ ${lateRoutes} route${lateRoutes>1?'s':''} with late arrivals</div>`:''}` ;
   document.getElementById('routes-page-sub').textContent=`${generatedRoutes.length} routes optimised · ${total} stops covered`;
   renderRouteCards();
 }
@@ -952,7 +955,7 @@ function renderRouteCards(){
   let filtered=generatedRoutes;
   if(fv) filtered=filtered.filter(r=>r.vehicle===fv);
   if(fz) filtered=filtered.filter(r=>r.zones.includes(fz)||fz==='Outstation'&&r.isOutstation);
-  if(fc) filtered=filtered.filter(r=>r.hasConflict);
+  if(fc) filtered=filtered.filter(r=>r.hasConflict||r.hasLate);
   const grid=document.getElementById('routes-grid');
   grid.innerHTML='';
   filtered.forEach((r)=>{
@@ -985,6 +988,7 @@ function renderRouteCards(){
         <div class="route-stops-preview">
           ${r.zones.map(z=>`<span class="badge badge-ncr" style="margin-right:3px">${z}</span>`).join('')}
           ${r.hasConflict?'<span class="warning-badge">⚠ Scheduling conflict</span>':''}
+          ${r.hasLate?'<span class="warning-badge" style="background:#fee2e2;color:#991b1b">⚠ Late arrivals</span>':''}
           <div style="margin-top:4px">${r.stops.slice(0,2).map(s=>s.name).join(' → ')}${r.stops.length>2?` → +${r.stops.length-2} more`:''}</div>
         </div>
       </div>`;
