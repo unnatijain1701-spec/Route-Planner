@@ -326,6 +326,56 @@ input[type=file]{display:none}
     </div>
   </div>
 
+
+  <div class="card" style="margin-top:16px">
+    <div style="font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text-muted)">VEHICLE LIMITS</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">Per-vehicle caps on drop points and route distance. The tighter of this limit and the global max distance setting above will apply.</div>
+    <div class="scroll-x">
+      <table class="preview-table" style="font-size:12px">
+        <thead>
+          <tr>
+            <th>Vehicle</th>
+            <th>Max Load (kg)</th>
+            <th>Max Drop Points</th>
+            <th>Max Route Distance (km)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="vehicle-badge v-ev450">EV450</span></td>
+            <td style="color:var(--text-muted)">≤ 150 kg</td>
+            <td><input type="number" id="vl-ev450-stops" value="8" min="1" max="50" style="width:70px;text-align:center;padding:4px"/> stops</td>
+            <td><input type="number" id="vl-ev450-dist" value="80" min="10" max="500" style="width:80px;text-align:center;padding:4px"/> km</td>
+          </tr>
+          <tr>
+            <td><span class="vehicle-badge v-ace">ACE</span></td>
+            <td style="color:var(--text-muted)">≤ 500 kg</td>
+            <td><input type="number" id="vl-ace-stops" value="15" min="1" max="50" style="width:70px;text-align:center;padding:4px"/> stops</td>
+            <td><input type="number" id="vl-ace-dist" value="120" min="10" max="500" style="width:80px;text-align:center;padding:4px"/> km</td>
+          </tr>
+          <tr>
+            <td><span class="vehicle-badge v-bolero">Bolero</span></td>
+            <td style="color:var(--text-muted)">≤ 1,000 kg</td>
+            <td><input type="number" id="vl-bolero-stops" value="20" min="1" max="60" style="width:70px;text-align:center;padding:4px"/> stops</td>
+            <td><input type="number" id="vl-bolero-dist" value="200" min="10" max="500" style="width:80px;text-align:center;padding:4px"/> km</td>
+          </tr>
+          <tr>
+            <td><span class="vehicle-badge v-tata407">TATA 407</span></td>
+            <td style="color:var(--text-muted)">≤ 2,499 kg</td>
+            <td><input type="number" id="vl-tata407-stops" value="30" min="1" max="80" style="width:70px;text-align:center;padding:4px"/> stops</td>
+            <td><input type="number" id="vl-tata407-dist" value="300" min="10" max="600" style="width:80px;text-align:center;padding:4px"/> km</td>
+          </tr>
+          <tr>
+            <td><span class="vehicle-badge v-14ft">14FT</span></td>
+            <td style="color:var(--text-muted)">≤ 3,500 kg</td>
+            <td><input type="number" id="vl-14ft-stops" value="50" min="1" max="100" style="width:70px;text-align:center;padding:4px"/> stops</td>
+            <td><input type="number" id="vl-14ft-dist" value="500" min="10" max="1000" style="width:80px;text-align:center;padding:4px"/> km</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
   <div class="card" style="margin-top:16px;display:flex;align-items:center;justify-content:space-between;padding:16px 20px">
     <div>
       <div style="font-size:13px;font-weight:600">Apply Settings</div>
@@ -488,6 +538,23 @@ function assignVehicle(weight){
   if(weight<=2499) return 'TATA 407';
   return '14FT';
 }
+function getVehicleLimits(vehicleType){
+  const defs={
+    'EV450'   :{maxStops:8 ,maxDistKm:80 },
+    'ACE'     :{maxStops:15,maxDistKm:120},
+    'Bolero'  :{maxStops:20,maxDistKm:200},
+    'TATA 407':{maxStops:30,maxDistKm:300},
+    '14FT'    :{maxStops:50,maxDistKm:500},
+  };
+  const d=defs[vehicleType]||{maxStops:99,maxDistKm:999};
+  const key=vehicleType.toLowerCase().replace(/[\s\/]/g,'');
+  const stopsEl=document.getElementById(`vl-${key}-stops`);
+  const distEl=document.getElementById(`vl-${key}-dist`);
+  return{
+    maxStops :stopsEl?Math.max(1,parseInt(stopsEl.value)||d.maxStops):d.maxStops,
+    maxDistKm:distEl ?Math.max(10,parseInt(distEl.value)||d.maxDistKm):d.maxDistKm,
+  };
+}
 function vehicleBadgeClass(v){
   const m={'EV450':'v-ev450','ACE':'v-ace','Bolero':'v-bolero','TATA 407':'v-tata407','14FT':'v-14ft','Outstation':'v-outstation'};
   return m[v]||'v-ev450';
@@ -518,30 +585,37 @@ function fuzzyMatch(name){
 // reference dispatch so no-entry window waits are also included.
 // This ensures clustering never packs more stops than the driver-hours
 // limit allows, regardless of whether no-entry restrictions are on.
-function estimateRouteMins(stops,s){
-  if(!stops||stops.length===0) return s.loadingMin;
-  const ordered=etaSortedNeighbour([...stops]); // must match buildRouteFromCluster ordering
-  const dispRef=6*60; // 6 AM reference dispatch
-  let cum=dispRef+s.loadingMin;
+function estimateRouteStats(stops,s){
+  // Returns {mins, distKm} in a single pass — avoids computing twice during clustering.
+  if(!stops||stops.length===0) return{mins:s.loadingMin,distKm:0};
+  const ordered=etaSortedNeighbour([...stops]);
+  const dispRef=6*60;
+  let cum=dispRef+s.loadingMin,dist=0;
   let prevLat=WH.lat,prevLon=WH.lon;
   for(const o of ordered){
     const zone=getZone(o.lat,o.lon);
     const isOut=zone==='Outstation';
     const rf=isOut?ROAD_HWY:ROAD_CITY;
     const spd=isOut?s.highwaySpeed:s.citySpeed;
-    cum+=(haversine(prevLat,prevLon,o.lat,o.lon)*rf/spd)*60;
+    const d=haversine(prevLat,prevLon,o.lat,o.lon);
+    dist+=d*rf;
+    cum+=(d*rf/spd)*60;
     if(s.noEntry&&(zone==='Delhi'||zone==='Gurgaon')&&isNoEntry(zone,Math.round(cum))){
       cum=nextAllowedWindow(zone,Math.round(cum));
     }
     cum+=s.unloadingMin;
     prevLat=o.lat;prevLon=o.lon;
   }
-  // Return leg uses the last stop's zone to pick the right factor
   const lastZone=getZone(prevLat,prevLon);
   const retOut=lastZone==='Outstation';
-  cum+=haversine(prevLat,prevLon,WH.lat,WH.lon)*(retOut?ROAD_HWY:ROAD_CITY)/(retOut?s.highwaySpeed:s.citySpeed)*60;
-  return cum-dispRef; // duration including any no-entry waits
+  const retRf=retOut?ROAD_HWY:ROAD_CITY;
+  const retD=haversine(prevLat,prevLon,WH.lat,WH.lon)*retRf;
+  dist+=retD;
+  cum+=retD/(retOut?s.highwaySpeed:s.citySpeed)*60;
+  return{mins:cum-dispRef,distKm:Math.round(dist)};
 }
+// Thin wrapper kept for any legacy call-sites
+function estimateRouteMins(stops,s){ return estimateRouteStats(stops,s).mins; }
 
 // Cross-zone clustering that minimises vehicle count.
 // Fills each vehicle's time budget (up to overtimeHours) using geographic proximity.
@@ -570,9 +644,17 @@ function minVehicleCluster(orders,s){
       let bestIdx=-1,bestDist=Infinity;
       for(let i=0;i<remaining.length;i++){
         const o=remaining[i];
-        if(totalWeight+o.weight>maxWeight) continue;
-        const estTime=estimateRouteMins([...cluster,o],s);
-        if(estTime>maxTimeMins) continue;
+        const newWeight=totalWeight+o.weight;
+        if(newWeight>maxWeight) continue;
+        // Vehicle-specific stop count limit
+        const vType=assignVehicle(newWeight);
+        const vLimits=getVehicleLimits(vType);
+        if(cluster.length+1>vLimits.maxStops) continue;
+        // Combined time + distance check in a single pass
+        const stats=estimateRouteStats([...cluster,o],s);
+        if(stats.mins>maxTimeMins) continue;
+        // Apply the tighter of: global max-dist setting vs vehicle-specific max dist
+        if(stats.distKm>Math.min(s.maxDist,vLimits.maxDistKm)) continue;
         const dist=haversine(lastStop.lat,lastStop.lon,o.lat,o.lon);
         if(dist<bestDist){bestDist=dist;bestIdx=i;}
       }
