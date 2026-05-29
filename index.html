@@ -165,7 +165,7 @@ input[type=file]{display:none}
   <div class="section-header">
     <div>
       <div class="section-title">Upload Daily Orders</div>
-      <div style="font-size:12px;color:var(--text-muted);margin-top:2px">CSV or Excel with columns: outlet name, weight</div>
+      <div style="font-size:12px;color:var(--text-muted);margin-top:2px">CSV with columns: outlet name, weight</div>
     </div>
     <button class="btn btn-secondary btn-sm" onclick="loadSampleData()">Load sample data</button>
   </div>
@@ -176,7 +176,7 @@ input[type=file]{display:none}
       <div class="upload-title">Drop your orders CSV here or click to browse</div>
       <div class="upload-sub">Expected columns: <strong>outlet name</strong>, <strong>weight</strong> (kg)</div>
     </div>
-    <input type="file" id="file-input" accept=".csv,.xlsx,.xls" onchange="handleFile(event)"/>
+    <input type="file" id="file-input" accept=".csv" onchange="handleFile(event)"/>
   </div>
 
   <div id="upload-result" style="display:none">
@@ -231,7 +231,7 @@ input[type=file]{display:none}
         <option>Faridabad</option><option>Outstation</option>
       </select>
       <label style="font-size:12px;color:var(--text-muted);display:flex;align-items:center;gap:4px">
-        <input type="checkbox" id="filter-conflict" onchange="renderRouteCards()"> Show conflicts only
+        <input type="checkbox" id="filter-conflict" onchange="renderRouteCards()"> Show conflicts &amp; late arrivals only
       </label>
     </div>
     <div class="routes-grid" id="routes-grid"></div>
@@ -377,7 +377,7 @@ input[type=file]{display:none}
 // ═══════════════════════════════════════════════
 //  MASTER DATA — 293 outlets (9 corrected / flagged)
 // ═══════════════════════════════════════════════
-const MASTER_DATA = [{"name":"Amicus Natural Products Private Limited (Gole Market)","lat":28.6330632,"lon":77.2046653,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (Vikas Puri)","lat":28.6440107,"lon":77.0673254,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited GTB Nagar","lat":28.6974789,"lon":77.2050668,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Jangpura","lat":28.5819064,"lon":77.2459296,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Jasola","lat":28.5375083,"lon":77.2851494,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Laxmi Nagar","lat":28.6277582,"lon":77.2765361,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Malviya nagar","lat":28.5377493,"lon":77.2099058,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Rajouri Garden","lat":28.6538362,"lon":77.1322083,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Vasant kunj","lat":28.5273383,"lon":77.1334422,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (Sector 65)","lat":28.3981633,"lon":77.061651,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (SECTOR-82)","lat":28.3900561,"lon":76.9566833,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Golf Course Road","lat":28.4354766,"lon":77.0865034,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sector 106 Gurgaon","lat":28.5036643,"lon":76.9902625,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sector 16 Faridabad","lat":28.411466,"lon":77.3112722,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sector 48 Sohna Road","lat":28.4274986,"lon":77.0336806,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sushant Lok","lat":28.4606096,"lon":77.0600405,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Udyog Vihar","lat":28.5092129,"lon":77.0809646,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Greater Noida","lat":28.4812583,"lon":77.4817627,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (Noida Sec-73)","lat":28.579715,"lon":77.3827904,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Indirapuram","lat":28.644779,"lon":77.349469,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Gaur City 2","lat":28.6055623,"lon":77.4248777,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Sec-141","lat":28.5060152,"lon":77.4129281,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Sector 46","lat":28.5491449,"lon":77.3604615,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Sector 6","lat":28.59522,"lon":77.3171707,"eta":"12:00:00 PM"},{"name":"BABOUNE FOODS PRIVATE LIMITED","lat":28.429647,"lon":77.5517516,"eta":"10:00:00 AM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (D21)","lat":28.552,"lon":77.0583,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Epica/Moti Nagar)","lat":28.6580211,"lon":77.1424603,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Janak Cinema)","lat":28.611217,"lon":77.0911213,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Kalka Ji)","lat":28.5423462,"lon":77.2508492,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Kamal Nagar)","lat":28.6799802,"lon":77.2057303,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Mayur Vihar )","lat":28.6082973,"lon":77.2927525,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Papcific Mall Jasola)","lat":28.5371335,"lon":77.2804619,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Tagore Garden)","lat":28.6422449,"lon":77.1032077,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Unity One)","lat":28.7150017,"lon":77.1135215,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (VK)","lat":28.5416602,"lon":77.1526125,"eta":"8:00:00 PM"},{"name":"Compass India Food Services Private Limited (AMERICAN EXPRESS)","lat":28.4020767,"lon":77.0001488,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Private Limited (CPU GGN)","lat":28.430986,"lon":76.9881859,"eta":"2:00:00 PM"},{"name":"COMPASS INDIA FOOD SERVICES PRIVATE LIMITED (CPU3)","lat":28.4309864,"lon":76.9881859,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Private Limited (GOOGLE-SIGB)","lat":28.4605961,"lon":77.04562,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Pvt Ltd (Google Connect-Tril )","lat":28.4021778,"lon":77.0357018,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Pvt Ltd (GOOGLE INDIA-SIGD)","lat":28.4626522,"lon":77.0456581,"eta":"2:00:00 PM"},{"name":"GOC SERVICES INDIA PVT LTD - TIP-2","lat":28.411113,"lon":77.1148873,"eta":"2:00:00 PM"},{"name":"GOOGLE CONNECT SERVICES INDIA PVT (GOVO)","lat":28.4111137,"lon":77.1148873,"eta":"2:00:00 PM"},{"name":"CRAVICIOUS FOODS PRIVATE LIMITED (Noida)","lat":28.4297662,"lon":77.5416973,"eta":"9:00:00 AM"},{"name":"DANA CHOGA (SEC-14)","lat":28.4822964,"lon":77.0469473,"eta":"12:00:00 PM"},{"name":"DANA CHOGA (SEC-22)","lat":28.479786,"lon":77.0428029,"eta":"12:00:00 PM"},{"name":"DANA CHOGA (SEC-54)","lat":28.4799214,"lon":76.9649061,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (Nirvana)","lat":28.4139085,"lon":77.0634729,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (SEC-26)","lat":28.472074,"lon":77.0299822,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (SEC-45)","lat":28.4425811,"lon":77.0641662,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (SEC-47)","lat":28.4249497,"lon":77.0363624,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (Sec-83)","lat":28.3927181,"lon":76.8950844,"eta":"12:00:00 PM"},{"name":"Dana Choga Foods And Hospitality PVT LTD (DLF DOWN TOWN)","lat":28.5033853,"lon":77.0225452,"eta":"12:00:00 PM"},{"name":"Dana Choga Foods And Hospitality PVT LTD (DRK EXP Sec-102)","lat":28.4788028,"lon":76.9204464,"eta":"12:00:00 PM"},{"name":"Dana Choga Foods And Hospitality PVT LTD (Sector-69)","lat":28.3997196,"lon":76.9664704,"eta":"12:00:00 PM"},{"name":"Devyani International Limited (075)","lat":28.5673949,"lon":77.2441367,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (088)","lat":28.6416609,"lon":77.1024726,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (127)","lat":28.6406839,"lon":77.0724319,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (17)","lat":28.7126358,"lon":77.1249109,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (243)","lat":28.5501564,"lon":77.240549,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (248)","lat":28.6198556,"lon":76.9988705,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (250)","lat":28.6360067,"lon":77.0777769,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (72)","lat":28.5375172,"lon":77.2842286,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (897)","lat":28.658381,"lon":77.0004184,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P321)","lat":28.5506382,"lon":77.1194906,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P327)","lat":28.6132315,"lon":77.0377125,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P341)","lat":28.5247138,"lon":77.1539431,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P343)","lat":28.7160858,"lon":77.111706,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P345)","lat":28.6000576,"lon":77.0634459,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P348)","lat":28.5370958,"lon":77.2548546,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P354)","lat":28.6082792,"lon":76.9698377,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P388)","lat":28.6896704,"lon":77.1323937,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P401)","lat":28.6012146,"lon":77.0105079,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P426)","lat":28.6994833,"lon":77.2054419,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P486)","lat":28.5694587,"lon":77.2656061,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P488)","lat":28.592341,"lon":76.8971819,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P537)","lat":28.6539726,"lon":77.2587749,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P568)","lat":28.5880549,"lon":77.16584,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P569)","lat":28.5839036,"lon":77.0690149,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P606)","lat":28.6221355,"lon":76.9862533,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P623)","lat":28.6574382,"lon":77.2840453,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P630)","lat":28.7186735,"lon":77.0286385,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P666)","lat":28.6894831,"lon":77.2671513,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P672)","lat":28.6081465,"lon":77.2900088,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P681)","lat":28.7345125,"lon":77.0954734,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P705)","lat":28.6793671,"lon":77.1929436,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P723)","lat":28.8538915,"lon":77.0844601,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P744)","lat":28.5074045,"lon":77.2219457,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P748)","lat":28.5541417,"lon":77.0626493,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P775)","lat":28.6674867,"lon":77.0827502,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P782)","lat":28.6275385,"lon":77.2096182,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P800)","lat":28.5763568,"lon":77.1846609,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P802)","lat":28.6193963,"lon":77.0690267,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P840)","lat":28.5557284,"lon":77.0884011,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P845)","lat":28.5558729,"lon":77.0164482,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P864)","lat":28.568423,"lon":76.8631398,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P867)","lat":28.6330629,"lon":77.1281408,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P921)","lat":28.7011567,"lon":77.1066082,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P938)","lat":28.5578053,"lon":77.0523055,"eta":"11:59:00 PM"},{"name":"Devyani International Ltd (K094)","lat":28.5579409,"lon":76.9753305,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED ( 372)","lat":28.4790203,"lon":77.0702722,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED ( Y049)","lat":28.521859,"lon":77.0127437,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (119)","lat":28.4733535,"lon":76.9989306,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (203)","lat":28.4375528,"lon":77.0304649,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (232)","lat":28.4398904,"lon":76.9964412,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (25)","lat":28.4757787,"lon":77.0344274,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (26)","lat":28.5038946,"lon":77.0866786,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (301)","lat":28.5038127,"lon":77.086731,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (330)","lat":28.4249075,"lon":77.028996,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (349)","lat":28.4392595,"lon":77.0303617,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (374)","lat":28.3234956,"lon":76.8910939,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (58)","lat":28.4434363,"lon":77.045703,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K120)","lat":28.4437155,"lon":77.0464847,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K163)","lat":28.3908959,"lon":77.0567997,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K179)","lat":28.4039049,"lon":76.937464,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K199)","lat":28.4242722,"lon":77.084561,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K283)","lat":28.5029875,"lon":77.0796118,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K287)","lat":28.4624571,"lon":77.0775178,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K479)","lat":28.4017489,"lon":77.0087267,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K487)","lat":28.4393693,"lon":76.9957191,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K512)","lat":28.5030594,"lon":76.9967414,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K536)","lat":28.4244846,"lon":76.9202855,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K549)","lat":28.459323,"lon":77.0377806,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K579)","lat":28.4247203,"lon":77.0580288,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K585)","lat":28.4670343,"lon":76.9590467,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K633)","lat":28.3774102,"lon":76.9487424,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K689)","lat":28.4342078,"lon":77.0489236,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K704)","lat":28.4936786,"lon":77.0785144,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K708)","lat":28.4457886,"lon":77.0707471,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K753)","lat":28.4460101,"lon":76.9165523,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K951)","lat":28.4464162,"lon":76.9165509,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (KFC Paras Floret- Y009 )","lat":28.4468223,"lon":76.9165494,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P328)","lat":28.4257615,"lon":77.0471166,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P339)","lat":28.4624704,"lon":77.0525184,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P381)","lat":28.3907515,"lon":77.0570089,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P400)","lat":28.4039039,"lon":76.9374727,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P478)","lat":28.4039917,"lon":76.9066368,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P679)","lat":28.401361,"lon":77.0097248,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P710)","lat":28.4242044,"lon":76.8609092,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P745)","lat":28.4668503,"lon":76.9591279,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P764)","lat":28.4249611,"lon":77.0286884,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P772)","lat":28.4259953,"lon":76.8744907,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P812)","lat":28.3765803,"lon":76.9494189,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P829)","lat":28.4801238,"lon":77.0702264,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P876)","lat":28.4531201,"lon":77.0406731,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P893)","lat":28.4533468,"lon":76.7219619,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (Y038)","lat":28.393137,"lon":76.9658236,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED(K833)","lat":28.4064737,"lon":77.0344112,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED(Z011)","lat":28.4131565,"lon":77.1033597,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED(Z102)","lat":28.5227688,"lon":77.0134338,"eta":"11:59:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED - Karnal Haveli Haryana","lat":29.7563861,"lon":76.9662003,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED - Sector7 Karnal","lat":29.6868139,"lon":76.9925025,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (DME 33 Nuh -75557)","lat":28.0342246,"lon":77.1175204,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Milestone 109)","lat":29.5689136,"lon":76.9575623,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Subway Riyasat Resort)","lat":29.9023317,"lon":76.9108668,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Advent)","lat":28.5010521,"lon":77.4071308,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Alpha 1 Noida)","lat":28.4729973,"lon":77.5120928,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Blue Sapphire)","lat":28.6073795,"lon":77.4337689,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Botanical Garden)","lat":28.5640684,"lon":77.3317051,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Cleo County Noida)","lat":28.5969889,"lon":77.3900526,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (CRC Sublimis Noida)","lat":28.5755589,"lon":77.4306096,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Garh Road)","lat":28.967412,"lon":77.7120732,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Golden I Noida)","lat":28.5915625,"lon":77.433003,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Grand Venice Mall)","lat":28.465273,"lon":77.4924738,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Gulshan Mall)","lat":28.5080789,"lon":77.3842946,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Logix Cyber Park)","lat":28.6124104,"lon":77.2213553,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (North india Mall)","lat":28.6371191,"lon":77.3643643,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Rcube Monad Noida)","lat":28.5607345,"lon":77.3541734,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sec 110)","lat":28.5450091,"lon":77.3663644,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sec 120)","lat":28.5862095,"lon":77.3963359,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sector 18 Noida)","lat":28.5712739,"lon":77.3223166,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sector 78 Noida)","lat":28.5640416,"lon":77.3821266,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sharda Hospital, Greater Noida)","lat":28.4737847,"lon":77.4796348,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sky Mark)","lat":28.5320811,"lon":77.3590977,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Supertech 34 Noida)","lat":28.5820047,"lon":77.3623031,"eta":"9:00:00 PM"},{"name":"Eversub India Private Limited Shop (Eros Indirapuram)","lat":28.6404633,"lon":77.357803,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED Vaishali Ghaziabad","lat":28.6424755,"lon":77.3338424,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(AMITY UNIVERSITY )","lat":28.5466971,"lon":77.3319946,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Bennett University )","lat":28.4488702,"lon":77.5648461,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(DLF Mall of India)","lat":28.5673962,"lon":77.3184588,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Down Town Meerut)","lat":29.0079036,"lon":77.7440821,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Galaxy Business Park)","lat":28.6244756,"lon":77.3678741,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Gaur City)","lat":28.6059422,"lon":77.4269876,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Knowledge Park)","lat":28.4572322,"lon":77.497796,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(La Gracia Mall)","lat":28.6318861,"lon":77.4320217,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Mahagun Mart Gaur city2)","lat":28.6192855,"lon":77.4085695,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Noida-16)","lat":28.5801124,"lon":77.3126957,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Opulent Mall)","lat":28.654377,"lon":77.4340962,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Oxygen Business Park)","lat":28.4978686,"lon":77.4155267,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Pratap Vihar)","lat":28.6438786,"lon":77.4063285,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Subharti University)","lat":28.9626611,"lon":77.6374686,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Vasundhara)","lat":28.6339961,"lon":77.3116193,"eta":"9:00:00 PM"},{"name":"Haldiram Snacks Private Limited","lat":28.612092,"lon":77.372614,"eta":"8:00:00 AM"},{"name":"Jasper Associates Pvt Ltd","lat":28.59282,"lon":76.898952,"eta":"11:00:00 PM"},{"name":"Jubilant Foodworks Ltd (Gautam Budh Nagar)","lat":28.418341,"lon":76.711465,"eta":"11:00:00 AM"},{"name":"Jubilant Foodworks Ltd (Hongs Kitchen)","lat":28.418341,"lon":76.711465,"eta":"11:00:00 AM"},{"name":"Jubilant Foodworks LTD (Mohali)","lat":30.7275702,"lon":76.7066442,"eta":"11:00:00 AM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED ( Ansa City Centre)","lat":28.3753467,"lon":76.2903457,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (ATS Ghaziabad)","lat":28.6558466,"lon":77.4702711,"eta":"8:00:00 PM"},{"name":"Muhavra Enterprises Pvt. Ltd.(HR)","lat":28.5064736,"lon":77.0843463,"eta":"12:00:00 PM"},{"name":"OBEROI FLIGHT SERVICES-DL","lat":28.5570221,"lon":77.0794945,"eta":"11:00:00 AM"},{"name":"Om Sweets Pvt Ltd","lat":28.4409613,"lon":76.9622499,"eta":"10:00:00 AM"},{"name":"PJTJ TECHNOLOGIS PRIVATE LIMTED(Sec-42)","lat":28.9023476,"lon":77.0636788,"eta":"6:00:00 PM"},{"name":"Rebel Foods Private Limited (Mohali-1)","lat":30.7282765,"lon":76.767163,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited (NAC Chandigarh)","lat":30.7077473,"lon":76.8194847,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited (Mohali-2)","lat":30.7164004,"lon":76.7136114,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited ( Kharar)","lat":30.745118,"lon":76.5090774,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited (Phase 11 Mohali)","lat":30.6796508,"lon":76.6624635,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited (Zirakpur)","lat":30.6490351,"lon":76.8197598,"eta":"7:00:00 PM"},{"name":"Sapphire Foods India Limited (5301)","lat":28.5414259,"lon":77.1187444,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5302)","lat":28.632675,"lon":77.2137476,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5303)","lat":28.6312083,"lon":77.2166035,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5304)","lat":28.592133,"lon":77.0370089,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5306)","lat":28.5922068,"lon":76.9983837,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5307)","lat":28.620879,"lon":77.0636856,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5308)","lat":28.62836,"lon":77.0576856,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5309)","lat":28.542172,"lon":77.2509964,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5310)","lat":28.6804737,"lon":77.2055151,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5312)","lat":28.5693297,"lon":77.2401951,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5313)","lat":28.7008321,"lon":77.0983959,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5314)","lat":28.5514532,"lon":77.2490655,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5315)","lat":28.6455397,"lon":77.1663551,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5316)","lat":28.6393532,"lon":77.2862462,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5317)","lat":28.714871,"lon":76.9723244,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5318)","lat":28.52342,"lon":77.1986778,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5319)","lat":28.642702,"lon":76.8175489,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5321)","lat":28.5331605,"lon":77.1453832,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5322)","lat":28.5294731,"lon":77.2168693,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5325)","lat":28.6893582,"lon":77.1318803,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5326)","lat":28.6592768,"lon":77.2861468,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5327)","lat":28.6509956,"lon":77.1187633,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5328)","lat":28.5891041,"lon":77.2990282,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5329)","lat":28.690235,"lon":77.0062974,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5333)","lat":28.6008217,"lon":77.0271391,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5334)","lat":28.7151222,"lon":76.9723241,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5335)","lat":28.6032646,"lon":77.0731985,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5337)","lat":28.5525251,"lon":77.0559023,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5338)","lat":28.6894885,"lon":77.0520524,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5339)","lat":28.6565739,"lon":77.1467408,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5340)","lat":28.6681175,"lon":77.051342,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5341)","lat":28.5369295,"lon":77.1938657,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5342)","lat":28.5763717,"lon":77.1925591,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5343)","lat":28.6225445,"lon":77.0568255,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5345)","lat":28.6679038,"lon":77.2260479,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5346)","lat":28.5627047,"lon":77.2221251,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5348)","lat":28.6061655,"lon":76.9837122,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5349)","lat":28.636656,"lon":77.1433094,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5351)","lat":28.6180267,"lon":77.2769401,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5352)","lat":28.6370693,"lon":77.282071,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5353)","lat":28.5439522,"lon":77.1972016,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5354)","lat":28.6639868,"lon":77.0898903,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5357)","lat":28.7129457,"lon":77.1557361,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5358)","lat":28.6759597,"lon":77.3183401,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5359)","lat":28.6160325,"lon":77.0825611,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5360)","lat":28.7343987,"lon":77.1111141,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5361)","lat":28.5373056,"lon":77.2803665,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5362)","lat":28.5616182,"lon":77.2663202,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5363)","lat":28.5576038,"lon":77.1617709,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5365)","lat":28.5202606,"lon":77.2771766,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5366)","lat":28.624036,"lon":76.9511168,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5367)","lat":28.6417748,"lon":77.1202052,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5368)","lat":28.5069037,"lon":77.2295632,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5369)","lat":28.6448498,"lon":77.186095,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5371)","lat":28.5470753,"lon":77.2493145,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5373)","lat":28.6796716,"lon":77.1914384,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5374)","lat":28.6606797,"lon":77.2951731,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5375)","lat":28.5747772,"lon":77.0650312,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5376)","lat":28.5942767,"lon":77.2959271,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5380)","lat":28.555664,"lon":77.097029,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5381)","lat":28.5920963,"lon":77.1595575,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5382)","lat":28.5213357,"lon":77.0797561,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5383)","lat":28.4812248,"lon":77.1232261,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5384)","lat":28.627043,"lon":77.0620705,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5386)","lat":28.6704826,"lon":77.1303563,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5388)","lat":28.6125448,"lon":77.3080652,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5390)","lat":28.6580437,"lon":77.1425511,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5391)","lat":28.6951998,"lon":77.1497269,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5395)","lat":28.5768762,"lon":77.0145511,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (DLF Midtown Plaza-5389)","lat":28.6635802,"lon":77.1512498,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5332)","lat":28.6456329,"lon":77.2072611,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5378)","lat":28.6983662,"lon":77.2032428,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5379)","lat":28.6553102,"lon":77.2059232,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5393)","lat":28.5023257,"lon":77.2963861,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2600)","lat":28.4944078,"lon":77.0904352,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2601)","lat":28.5079483,"lon":77.0430755,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2603)","lat":28.5116913,"lon":77.0329836,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2606)","lat":28.4210613,"lon":77.0880937,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5904)","lat":28.9327626,"lon":76.9924386,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5921)","lat":29.341691,"lon":76.9753366,"eta":"11:59:00 PM"},{"name":"Tajsats Air Catering Ltd (Delhi)","lat":28.5487286,"lon":77.1048235,"eta":"8:00:00 AM"},{"name":"THEA KITCHEN PRIVATE LIMITED","lat":28.4338299,"lon":77.0001935,"eta":"9:00:00 AM"},{"name":"VRB CONSUMER PRODUCTS PRIVATE LIMITED (Alwar-1)","lat":27.815332,"lon":76.2224499,"eta":"As per customer"},{"name":"VRB CONSUMER PRODUCTS PRIVATE LIMITED (Alwar-2)","lat":27.9805499,"lon":76.3845559,"eta":"As per customer"}];
+const MASTER_DATA = [{"name":"Amicus Natural Products Private Limited (Gole Market)","lat":28.6330632,"lon":77.2046653,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (Vikas Puri)","lat":28.6440107,"lon":77.0673254,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited GTB Nagar","lat":28.6974789,"lon":77.2050668,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Jangpura","lat":28.5819064,"lon":77.2459296,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Jasola","lat":28.5375083,"lon":77.2851494,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Laxmi Nagar","lat":28.6277582,"lon":77.2765361,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Malviya nagar","lat":28.5377493,"lon":77.2099058,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Rajouri Garden","lat":28.6538362,"lon":77.1322083,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Vasant kunj","lat":28.5273383,"lon":77.1334422,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (Sector 65)","lat":28.3981633,"lon":77.061651,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (SECTOR-82)","lat":28.3900561,"lon":76.9566833,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Golf Course Road","lat":28.4354766,"lon":77.0865034,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sector 106 Gurgaon","lat":28.5036643,"lon":76.9902625,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sector 16 Faridabad","lat":28.411466,"lon":77.3112722,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sector 48 Sohna Road","lat":28.4274986,"lon":77.0336806,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Sushant Lok","lat":28.4606096,"lon":77.0600405,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Udyog Vihar","lat":28.5092129,"lon":77.0809646,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Greater Noida","lat":28.4812583,"lon":77.4817627,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited (Noida Sec-73)","lat":28.579715,"lon":77.3827904,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Indirapuram","lat":28.644779,"lon":77.349469,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Gaur City 2","lat":28.6055623,"lon":77.4248777,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Sec-141","lat":28.5060152,"lon":77.4129281,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Sector 46","lat":28.5491449,"lon":77.3604615,"eta":"12:00:00 PM"},{"name":"Amicus Natural Products Private Limited Noida Sector 6","lat":28.59522,"lon":77.3171707,"eta":"12:00:00 PM"},{"name":"BABOUNE FOODS PRIVATE LIMITED","lat":28.429647,"lon":77.5517516,"eta":"10:00:00 AM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (D21)","lat":28.552,"lon":77.0583,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Epica/Moti Nagar)","lat":28.6580211,"lon":77.1424603,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Janak Cinema)","lat":28.611217,"lon":77.0911213,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Kalka Ji)","lat":28.5423462,"lon":77.2508492,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Kamal Nagar)","lat":28.6799802,"lon":77.2057303,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Mayur Vihar )","lat":28.6082973,"lon":77.2927525,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Papcific Mall Jasola)","lat":28.5371335,"lon":77.2804619,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Tagore Garden)","lat":28.6422449,"lon":77.1032077,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (Unity One)","lat":28.7150017,"lon":77.1135215,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (VK)","lat":28.5416602,"lon":77.1526125,"eta":"8:00:00 PM"},{"name":"Compass India Food Services Private Limited (AMERICAN EXPRESS)","lat":28.4020767,"lon":77.0001488,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Private Limited (CPU GGN)","lat":28.430986,"lon":76.9881859,"eta":"2:00:00 PM"},{"name":"COMPASS INDIA FOOD SERVICES PRIVATE LIMITED (CPU3)","lat":28.4309864,"lon":76.9881859,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Private Limited (GOOGLE-SIGB)","lat":28.4605961,"lon":77.04562,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Pvt Ltd (Google Connect-Tril )","lat":28.4021778,"lon":77.0357018,"eta":"2:00:00 PM"},{"name":"Compass India Food Services Pvt Ltd (GOOGLE INDIA-SIGD)","lat":28.4626522,"lon":77.0456581,"eta":"2:00:00 PM"},{"name":"GOC SERVICES INDIA PVT LTD - TIP-2","lat":28.411113,"lon":77.1148873,"eta":"2:00:00 PM"},{"name":"GOOGLE CONNECT SERVICES INDIA PVT (GOVO)","lat":28.4111137,"lon":77.1148873,"eta":"2:00:00 PM"},{"name":"CRAVICIOUS FOODS PRIVATE LIMITED (Noida)","lat":28.4297662,"lon":77.5416973,"eta":"9:00:00 AM"},{"name":"DANA CHOGA (SEC-14)","lat":28.4822964,"lon":77.0469473,"eta":"12:00:00 PM"},{"name":"DANA CHOGA (SEC-22)","lat":28.479786,"lon":77.0428029,"eta":"12:00:00 PM"},{"name":"DANA CHOGA (SEC-54)","lat":28.4799214,"lon":76.9649061,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (Nirvana)","lat":28.4139085,"lon":77.0634729,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (SEC-26)","lat":28.472074,"lon":77.0299822,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (SEC-45)","lat":28.4425811,"lon":77.0641662,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (SEC-47)","lat":28.4249497,"lon":77.0363624,"eta":"12:00:00 PM"},{"name":"DANA CHOGA FOODS AND HOSPITALITY PRIVATE (Sec-83)","lat":28.3927181,"lon":76.8950844,"eta":"12:00:00 PM"},{"name":"Dana Choga Foods And Hospitality PVT LTD (DLF DOWN TOWN)","lat":28.5033853,"lon":77.0225452,"eta":"12:00:00 PM"},{"name":"Dana Choga Foods And Hospitality PVT LTD (DRK EXP Sec-102)","lat":28.4788028,"lon":76.9204464,"eta":"12:00:00 PM"},{"name":"Dana Choga Foods And Hospitality PVT LTD (Sector-69)","lat":28.3997196,"lon":76.9664704,"eta":"12:00:00 PM"},{"name":"Devyani International Limited (075)","lat":28.5673949,"lon":77.2441367,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (088)","lat":28.6416609,"lon":77.1024726,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (127)","lat":28.6406839,"lon":77.0724319,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (17)","lat":28.7126358,"lon":77.1249109,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (243)","lat":28.5501564,"lon":77.240549,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (248)","lat":28.6198556,"lon":76.9988705,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (250)","lat":28.6360067,"lon":77.0777769,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (72)","lat":28.5375172,"lon":77.2842286,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (897)","lat":28.658381,"lon":77.0004184,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P321)","lat":28.5506382,"lon":77.1194906,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P327)","lat":28.6132315,"lon":77.0377125,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P341)","lat":28.5247138,"lon":77.1539431,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P343)","lat":28.7160858,"lon":77.111706,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P345)","lat":28.6000576,"lon":77.0634459,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P348)","lat":28.5370958,"lon":77.2548546,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P354)","lat":28.6082792,"lon":76.9698377,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P388)","lat":28.6896704,"lon":77.1323937,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P401)","lat":28.6012146,"lon":77.0105079,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P426)","lat":28.6994833,"lon":77.2054419,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P486)","lat":28.5694587,"lon":77.2656061,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P488)","lat":28.592341,"lon":76.8971819,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P537)","lat":28.6539726,"lon":77.2587749,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P568)","lat":28.5880549,"lon":77.16584,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P569)","lat":28.5839036,"lon":77.0690149,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P606)","lat":28.6221355,"lon":76.9862533,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P623)","lat":28.6574382,"lon":77.2840453,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P630)","lat":28.7186735,"lon":77.0286385,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P666)","lat":28.6894831,"lon":77.2671513,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P672)","lat":28.6081465,"lon":77.2900088,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P681)","lat":28.7345125,"lon":77.0954734,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P705)","lat":28.6793671,"lon":77.1929436,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P723)","lat":28.8538915,"lon":77.0844601,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P744)","lat":28.5074045,"lon":77.2219457,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P748)","lat":28.5541417,"lon":77.0626493,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P775)","lat":28.6674867,"lon":77.0827502,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P782)","lat":28.6275385,"lon":77.2096182,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P800)","lat":28.5763568,"lon":77.1846609,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P802)","lat":28.6193963,"lon":77.0690267,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P840)","lat":28.5557284,"lon":77.0884011,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P845)","lat":28.5558729,"lon":77.0164482,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P864)","lat":28.568423,"lon":76.8631398,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P867)","lat":28.6330629,"lon":77.1281408,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P921)","lat":28.7011567,"lon":77.1066082,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P938)","lat":28.5578053,"lon":77.0523055,"eta":"11:59:00 PM"},{"name":"Devyani International Ltd (K094)","lat":28.5579409,"lon":76.9753305,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED ( 372)","lat":28.4790203,"lon":77.0702722,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED ( Y049)","lat":28.521859,"lon":77.0127437,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (119)","lat":28.4733535,"lon":76.9989306,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (203)","lat":28.4375528,"lon":77.0304649,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (232)","lat":28.4398904,"lon":76.9964412,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (25)","lat":28.4757787,"lon":77.0344274,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (26)","lat":28.5038946,"lon":77.0866786,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (301)","lat":28.5038127,"lon":77.086731,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (330)","lat":28.4249075,"lon":77.028996,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (349)","lat":28.4392595,"lon":77.0303617,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (374)","lat":28.3234956,"lon":76.8910939,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (58)","lat":28.4434363,"lon":77.045703,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K120)","lat":28.4437155,"lon":77.0464847,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K163)","lat":28.3908959,"lon":77.0567997,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K179)","lat":28.4039049,"lon":76.937464,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K199)","lat":28.4242722,"lon":77.084561,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K283)","lat":28.5029875,"lon":77.0796118,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K287)","lat":28.4624571,"lon":77.0775178,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K479)","lat":28.4017489,"lon":77.0087267,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K487)","lat":28.4393693,"lon":76.9957191,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K512)","lat":28.5030594,"lon":76.9967414,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K536)","lat":28.4244846,"lon":76.9202855,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K549)","lat":28.459323,"lon":77.0377806,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K579)","lat":28.4247203,"lon":77.0580288,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K585)","lat":28.4670343,"lon":76.9590467,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K633)","lat":28.3774102,"lon":76.9487424,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K689)","lat":28.4342078,"lon":77.0489236,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K704)","lat":28.4936786,"lon":77.0785144,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K708)","lat":28.4457886,"lon":77.0707471,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K753)","lat":28.4460101,"lon":76.9165523,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (K951)","lat":28.4464162,"lon":76.9165509,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (KFC Paras Floret- Y009 )","lat":28.4468223,"lon":76.9165494,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P328)","lat":28.4257615,"lon":77.0471166,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P339)","lat":28.4624704,"lon":77.0525184,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P381)","lat":28.3907515,"lon":77.0570089,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P400)","lat":28.4039039,"lon":76.9374727,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P478)","lat":28.4039917,"lon":76.9066368,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P679)","lat":28.401361,"lon":77.0097248,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P710)","lat":28.4242044,"lon":76.8609092,"eta":"11:59:00 PM"},{"name":"Devyani International Limited (P745)","lat":28.4668503,"lon":76.9591279,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P764)","lat":28.4249611,"lon":77.0286884,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P772)","lat":28.4259953,"lon":76.8744907,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P812)","lat":28.3765803,"lon":76.9494189,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P829)","lat":28.4801238,"lon":77.0702264,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P876)","lat":28.4531201,"lon":77.0406731,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (P893)","lat":28.4533468,"lon":76.7219619,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED (Y038)","lat":28.393137,"lon":76.9658236,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED(K833)","lat":28.4064737,"lon":77.0344112,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED(Z011)","lat":28.4131565,"lon":77.1033597,"eta":"11:59:00 PM"},{"name":"DEVYANI INTERNATIONAL LIMITED(Z102)","lat":28.5227688,"lon":77.0134338,"eta":"11:59:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED - Karnal Haveli Haryana","lat":29.7563861,"lon":76.9662003,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED - Sector7 Karnal","lat":29.6868139,"lon":76.9925025,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (DME 33 Nuh -75557)","lat":28.0342246,"lon":77.1175204,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Milestone 109)","lat":29.5689136,"lon":76.9575623,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Subway Riyasat Resort)","lat":29.9023317,"lon":76.9108668,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Advent)","lat":28.5010521,"lon":77.4071308,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Alpha 1 Noida)","lat":28.4729973,"lon":77.5120928,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Blue Sapphire)","lat":28.6073795,"lon":77.4337689,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Botanical Garden)","lat":28.5640684,"lon":77.3317051,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Cleo County Noida)","lat":28.5969889,"lon":77.3900526,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (CRC Sublimis Noida)","lat":28.5755589,"lon":77.4306096,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Garh Road)","lat":28.967412,"lon":77.7120732,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Golden I Noida)","lat":28.5915625,"lon":77.433003,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Grand Venice Mall)","lat":28.465273,"lon":77.4924738,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Gulshan Mall)","lat":28.5080789,"lon":77.3842946,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Logix Cyber Park)","lat":28.6124104,"lon":77.2213553,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (North india Mall)","lat":28.6371191,"lon":77.3643643,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Rcube Monad Noida)","lat":28.5607345,"lon":77.3541734,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sec 110)","lat":28.5450091,"lon":77.3663644,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sec 120)","lat":28.5862095,"lon":77.3963359,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sector 18 Noida)","lat":28.5712739,"lon":77.3223166,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sector 78 Noida)","lat":28.5640416,"lon":77.3821266,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sharda Hospital, Greater Noida)","lat":28.4737847,"lon":77.4796348,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Sky Mark)","lat":28.5320811,"lon":77.3590977,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED (Supertech 34 Noida)","lat":28.5820047,"lon":77.3623031,"eta":"9:00:00 PM"},{"name":"Eversub India Private Limited Shop (Eros Indirapuram)","lat":28.6404633,"lon":77.357803,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED Vaishali Ghaziabad","lat":28.6424755,"lon":77.3338424,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(AMITY UNIVERSITY )","lat":28.5466971,"lon":77.3319946,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Bennett University )","lat":28.4488702,"lon":77.5648461,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(DLF Mall of India)","lat":28.5673962,"lon":77.3184588,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Down Town Meerut)","lat":29.0079036,"lon":77.7440821,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Galaxy Business Park)","lat":28.6244756,"lon":77.3678741,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Gaur City)","lat":28.6059422,"lon":77.4269876,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Knowledge Park)","lat":28.4572322,"lon":77.497796,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(La Gracia Mall)","lat":28.6318861,"lon":77.4320217,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Mahagun Mart Gaur city2)","lat":28.6192855,"lon":77.4085695,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Noida-16)","lat":28.5801124,"lon":77.3126957,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Opulent Mall)","lat":28.654377,"lon":77.4340962,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Oxygen Business Park)","lat":28.4978686,"lon":77.4155267,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Pratap Vihar)","lat":28.6438786,"lon":77.4063285,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Subharti University)","lat":28.9626611,"lon":77.6374686,"eta":"9:00:00 PM"},{"name":"EVERSUB INDIA PRIVATE LIMITED(Vasundhara)","lat":28.6339961,"lon":77.3116193,"eta":"9:00:00 PM"},{"name":"Haldiram Snacks Private Limited","lat":28.612092,"lon":77.372614,"eta":"8:00:00 AM"},{"name":"Jasper Associates Pvt Ltd","lat":28.59282,"lon":76.898952,"eta":"11:00:00 PM"},{"name":"Jubilant Foodworks Ltd (Gautam Budh Nagar)","lat":28.418341,"lon":76.711465,"eta":"11:00:00 AM"},{"name":"Jubilant Foodworks Ltd (Hongs Kitchen)","lat":28.418341,"lon":76.711465,"eta":"11:00:00 AM"},{"name":"Jubilant Foodworks LTD (Mohali)","lat":30.7275702,"lon":76.7066442,"eta":"11:00:00 AM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED ( Ansa City Centre)","lat":28.3753467,"lon":76.2903457,"eta":"8:00:00 PM"},{"name":"BURMAN HOSPITALITY PRIVATE LIMITED (ATS Ghaziabad)","lat":28.6558466,"lon":77.4702711,"eta":"8:00:00 PM"},{"name":"Muhavra Enterprises Pvt. Ltd.(HR)","lat":28.5064736,"lon":77.0843463,"eta":"12:00:00 PM"},{"name":"OBEROI FLIGHT SERVICES-DL","lat":28.5570221,"lon":77.0794945,"eta":"11:00:00 AM"},{"name":"Om Sweets Pvt Ltd","lat":28.4409613,"lon":76.9622499,"eta":"10:00:00 AM"},{"name":"PJTJ TECHNOLOGIS PRIVATE LIMTED(Sec-42)","lat":28.9023476,"lon":77.0636788,"eta":"6:00:00 PM"},{"name":"Rebel Foods Private Limited","lat":30.7282765,"lon":76.767163,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited (NAC Chandigarh)","lat":30.7077473,"lon":76.8194847,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited","lat":30.7164004,"lon":76.7136114,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited ( Kharar)","lat":30.745118,"lon":76.5090774,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited (Phase 11 Mohali)","lat":30.6796508,"lon":76.6624635,"eta":"7:00:00 PM"},{"name":"Rebel Foods Private Limited (Zirakpur)","lat":30.6490351,"lon":76.8197598,"eta":"7:00:00 PM"},{"name":"Sapphire Foods India Limited (5301)","lat":28.5414259,"lon":77.1187444,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5302)","lat":28.632675,"lon":77.2137476,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5303)","lat":28.6312083,"lon":77.2166035,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5304)","lat":28.592133,"lon":77.0370089,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5306)","lat":28.5922068,"lon":76.9983837,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5307)","lat":28.620879,"lon":77.0636856,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5308)","lat":28.62836,"lon":77.0576856,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5309)","lat":28.542172,"lon":77.2509964,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5310)","lat":28.6804737,"lon":77.2055151,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5312)","lat":28.5693297,"lon":77.2401951,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5313)","lat":28.7008321,"lon":77.0983959,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5314)","lat":28.5514532,"lon":77.2490655,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5315)","lat":28.6455397,"lon":77.1663551,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5316)","lat":28.6393532,"lon":77.2862462,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5317)","lat":28.714871,"lon":76.9723244,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5318)","lat":28.52342,"lon":77.1986778,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5319)","lat":28.642702,"lon":76.8175489,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5321)","lat":28.5331605,"lon":77.1453832,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5322)","lat":28.5294731,"lon":77.2168693,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5325)","lat":28.6893582,"lon":77.1318803,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5326)","lat":28.6592768,"lon":77.2861468,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5327)","lat":28.6509956,"lon":77.1187633,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5328)","lat":28.5891041,"lon":77.2990282,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5329)","lat":28.690235,"lon":77.0062974,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5333)","lat":28.6008217,"lon":77.0271391,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5334)","lat":28.7151222,"lon":76.9723241,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5335)","lat":28.6032646,"lon":77.0731985,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5337)","lat":28.5525251,"lon":77.0559023,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5338)","lat":28.6894885,"lon":77.0520524,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5339)","lat":28.6565739,"lon":77.1467408,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5340)","lat":28.6681175,"lon":77.051342,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5341)","lat":28.5369295,"lon":77.1938657,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5342)","lat":28.5763717,"lon":77.1925591,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5343)","lat":28.6225445,"lon":77.0568255,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5345)","lat":28.6679038,"lon":77.2260479,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5346)","lat":28.5627047,"lon":77.2221251,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5348)","lat":28.6061655,"lon":76.9837122,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5349)","lat":28.636656,"lon":77.1433094,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5351)","lat":28.6180267,"lon":77.2769401,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5352)","lat":28.6370693,"lon":77.282071,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5353)","lat":28.5439522,"lon":77.1972016,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5354)","lat":28.6639868,"lon":77.0898903,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5357)","lat":28.7129457,"lon":77.1557361,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5358)","lat":28.6759597,"lon":77.3183401,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5359)","lat":28.6160325,"lon":77.0825611,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5360)","lat":28.7343987,"lon":77.1111141,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5361)","lat":28.5373056,"lon":77.2803665,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5362)","lat":28.5616182,"lon":77.2663202,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5363)","lat":28.5576038,"lon":77.1617709,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5365)","lat":28.5202606,"lon":77.2771766,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5366)","lat":28.624036,"lon":76.9511168,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5367)","lat":28.6417748,"lon":77.1202052,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5368)","lat":28.5069037,"lon":77.2295632,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5369)","lat":28.6448498,"lon":77.186095,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5371)","lat":28.5470753,"lon":77.2493145,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5373)","lat":28.6796716,"lon":77.1914384,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5374)","lat":28.6606797,"lon":77.2951731,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5375)","lat":28.5747772,"lon":77.0650312,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5376)","lat":28.5942767,"lon":77.2959271,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5380)","lat":28.555664,"lon":77.097029,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5381)","lat":28.5920963,"lon":77.1595575,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5382)","lat":28.5213357,"lon":77.0797561,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5383)","lat":28.4812248,"lon":77.1232261,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5384)","lat":28.627043,"lon":77.0620705,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5386)","lat":28.6704826,"lon":77.1303563,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5388)","lat":28.6125448,"lon":77.3080652,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5390)","lat":28.6580437,"lon":77.1425511,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5391)","lat":28.6951998,"lon":77.1497269,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5395)","lat":28.5768762,"lon":77.0145511,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (DLF Midtown Plaza-5389)","lat":28.6635802,"lon":77.1512498,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5332)","lat":28.6456329,"lon":77.2072611,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5378)","lat":28.6983662,"lon":77.2032428,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5379)","lat":28.6553102,"lon":77.2059232,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Ltd (5393)","lat":28.5023257,"lon":77.2963861,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2600)","lat":28.4944078,"lon":77.0904352,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2601)","lat":28.5079483,"lon":77.0430755,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2603)","lat":28.5116913,"lon":77.0329836,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (2606)","lat":28.4210613,"lon":77.0880937,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5904)","lat":28.9327626,"lon":76.9924386,"eta":"11:59:00 PM"},{"name":"Sapphire Foods India Limited (5921)","lat":29.341691,"lon":76.9753366,"eta":"11:59:00 PM"},{"name":"Tajsats Air Catering Ltd (Delhi)","lat":28.5487286,"lon":77.1048235,"eta":"8:00:00 AM"},{"name":"THEA KITCHEN PRIVATE LIMITED","lat":28.4338299,"lon":77.0001935,"eta":"9:00:00 AM"},{"name":"VRB CONSUMER PRODUCTS PRIVATE LIMITED","lat":27.815332,"lon":76.2224499,"eta":"As per customer"},{"name":"VRB CONSUMER PRODUCTS PRIVATE LIMITED","lat":27.9805499,"lon":76.3845559,"eta":"As per customer"}];
 
 const WH = {lat:28.938543, lon:77.082583};
 let generatedRoutes = [];
@@ -386,7 +386,6 @@ let mapInstance = null;
 let noEntryEnabled = true;   // no-entry toggle state
 const ROAD_CITY = 1.3;       // aerial → road distance factor (city)
 const ROAD_HWY  = 1.15;      // aerial → road distance factor (outstation/highway)
-const MAX_VEHICLE_WEIGHT = 3500; // kg — hard cap per vehicle
 
 // ═══════════════════════════════════════════════
 //  UTILITY FUNCTIONS
@@ -397,21 +396,18 @@ function haversine(lat1,lon1,lat2,lon2){
   return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
 }
 function etaToMinutes(etaStr){
-  if(!etaStr||etaStr==='As per customer') return 23*60+59;
+  if(!etaStr||etaStr==='As per customer') return Infinity;
   const m=etaStr.match(/(\d+):(\d+):\d+\s*(AM|PM)/i);
-  if(!m) return 23*60+59;
+  if(!m) return Infinity;
   let h=parseInt(m[1]),min=parseInt(m[2]),ap=m[3].toUpperCase();
   if(ap==='PM'&&h!==12) h+=12;
   if(ap==='AM'&&h===12) h=0;
   return h*60+min;
 }
 function minutesToTime(mins){
-  const totalMins=Math.round(mins);
-  const nextDay=totalMins>=24*60;
-  const h=Math.floor(totalMins/60)%24,m=totalMins%60;
+  const h=Math.floor(mins/60)%24,m=mins%60;
   const ap=h<12?'AM':'PM',hh=h%12||12;
-  if(hh===12&&m===0) return ap==='AM'?`12 Midnight${nextDay?' (+1 day)':''}`:'12 Noon';
-  return `${hh}:${m.toString().padStart(2,'0')} ${ap}${nextDay?' (+1 day)':''}`;
+  return `${hh}:${m.toString().padStart(2,'0')} ${ap}`;
 }
 function getZone(lat,lon){
   const dist=haversine(WH.lat,WH.lon,lat,lon);
@@ -483,7 +479,8 @@ function toggleNoEntry(){
 }
 function onSettingChange(){
   if(parsedOrders&&parsedOrders.length>0){
-    showToast('Settings changed — click Apply & Regenerate to update routes.');
+    clearTimeout(window._settingTimer);
+    window._settingTimer=setTimeout(()=>{generateRoutes();showToast('Routes updated!');},800);
   }
 }
 function assignVehicle(weight){
@@ -531,28 +528,23 @@ function estimateRouteMins(stops,s){
   let cum=dispRef+s.loadingMin;
   let prevLat=WH.lat,prevLon=WH.lon;
   for(const o of ordered){
+    cum+=(haversine(prevLat,prevLon,o.lat,o.lon)*ROAD_CITY/s.citySpeed)*60;
+    // Honour no-entry windows so the estimate reflects real wait times
     const zone=getZone(o.lat,o.lon);
-    const isOut=zone==='Outstation';
-    const rf=isOut?ROAD_HWY:ROAD_CITY;
-    const spd=isOut?s.highwaySpeed:s.citySpeed;
-    cum+=(haversine(prevLat,prevLon,o.lat,o.lon)*rf/spd)*60;
     if(s.noEntry&&(zone==='Delhi'||zone==='Gurgaon')&&isNoEntry(zone,Math.round(cum))){
       cum=nextAllowedWindow(zone,Math.round(cum));
     }
     cum+=s.unloadingMin;
     prevLat=o.lat;prevLon=o.lon;
   }
-  // Return leg uses the last stop's zone to pick the right factor
-  const lastZone=getZone(prevLat,prevLon);
-  const retOut=lastZone==='Outstation';
-  cum+=haversine(prevLat,prevLon,WH.lat,WH.lon)*(retOut?ROAD_HWY:ROAD_CITY)/(retOut?s.highwaySpeed:s.citySpeed)*60;
+  cum+=haversine(prevLat,prevLon,WH.lat,WH.lon)*ROAD_CITY/s.citySpeed*60;
   return cum-dispRef; // duration including any no-entry waits
 }
 
 // Cross-zone clustering that minimises vehicle count.
 // Fills each vehicle's time budget (up to overtimeHours) using geographic proximity.
 function minVehicleCluster(orders,s){
-  const maxWeight=MAX_VEHICLE_WEIGHT;
+  const maxWeight=3500;
   const maxTimeMins=(s.overtimeHours||14)*60;
   const clusters=[];
   const remaining=[...orders];
@@ -649,6 +641,68 @@ function buildRoutes(orders){
   return routes.sort((a,b)=>a.dispatchMins-b.dispatchMins);
 }
 
+function groupByETA(orders){
+  const groups={};
+  for(const o of orders){
+    const etaMins=etaToMinutes(o.eta);
+    let key;
+    if(etaMins<=8*60) key='early-morning';
+    else if(etaMins<=11*60) key='morning';
+    else if(etaMins<=14*60) key='noon';
+    else if(etaMins<=18*60) key='afternoon';
+    else if(etaMins<=22*60) key='evening';
+    else key='night';
+    if(!groups[key]) groups[key]=[];
+    groups[key].push(o);
+  }
+  return groups;
+}
+
+function greedyCluster(orders,s){ return greedyClusterByZone(orders,s); }
+
+function greedyClusterByZone(orders,s){
+  const clusters=[];
+  const used=new Set();
+  const maxWeight=3500;
+  // Sort by distance from warehouse so nearest stops seed clusters first
+  const sorted=[...orders].sort((a,b)=>{
+    const da=haversine(WH.lat,WH.lon,a.lat,a.lon);
+    const db=haversine(WH.lat,WH.lon,b.lat,b.lon);
+    return da-db;
+  });
+  for(let i=0;i<sorted.length;i++){
+    if(used.has(i)) continue;
+    const cluster=[sorted[i]];
+    used.add(i);
+    let totalW=sorted[i].weight;
+    let totalDist=haversine(WH.lat,WH.lon,sorted[i].lat,sorted[i].lon)*2;
+    const seedETA=etaToMinutes(sorted[i].eta);
+    for(let j=i+1;j<sorted.length;j++){
+      if(used.has(j)) continue;
+      const o=sorted[j];
+      // Hard: weight cap
+      if(totalW+o.weight>maxWeight) continue;
+      // Hard: distance cap
+      const cLat=cluster.reduce((a,c)=>a+c.lat,0)/cluster.length;
+      const cLon=cluster.reduce((a,c)=>a+c.lon,0)/cluster.length;
+      const dist=haversine(cLat,cLon,o.lat,o.lon);
+      if(totalDist+dist*1.4>s.maxDist) continue;
+      // Soft: ETA spread — allow up to 6hrs spread so lightweight stops
+      // with different ETAs can share a vehicle (driver delivers early ones first)
+      const etaMins=etaToMinutes(o.eta);
+      const clusterMinETA=Math.min(...cluster.map(c=>etaToMinutes(c.eta)));
+      const clusterMaxETA=Math.max(...cluster.map(c=>etaToMinutes(c.eta)));
+      const newSpread=Math.max(clusterMaxETA,etaMins)-Math.min(clusterMinETA,etaMins);
+      if(newSpread>6*60) continue;
+      cluster.push(o);
+      used.add(j);
+      totalW+=o.weight;
+      totalDist+=dist*1.4;
+    }
+    clusters.push(cluster);
+  }
+  return clusters;
+}
 
 function clusterByDirection(orders,s){
   // For outstation, cluster by bearing angle
@@ -668,7 +722,7 @@ function clusterByDirection(orders,s){
       if(used.has(j)) continue;
       const angleDiff=Math.abs(withBearing[i].bearing-withBearing[j].bearing);
       if(angleDiff>30) continue;
-      if(totalW+withBearing[j].weight>MAX_VEHICLE_WEIGHT) continue;
+      if(totalW+withBearing[j].weight>3500) continue;
       cluster.push(withBearing[j]);
       used.add(j);
       totalW+=withBearing[j].weight;
@@ -710,21 +764,22 @@ function buildRouteFromCluster(cluster,s,isOutstation){
       const dist=haversine(pl,plo,o.lat,o.lon);
       cum+=(dist*rf/speed)*60;
       const zone=getZone(o.lat,o.lon);
-      // Flag conflict BEFORE waiting — conflict means we arrived during a no-entry window
-      const conflict=s.noEntry&&(zone==='Delhi'||zone==='Gurgaon')&&isNoEntry(zone,Math.round(cum));
-      if(conflict){
+      // Respect no-entry windows: silently wait until the next allowed slot
+      if(s.noEntry&&(zone==='Delhi'||zone==='Gurgaon')&&isNoEntry(zone,Math.round(cum))){
         cum=nextAllowedWindow(zone,Math.round(cum));
-        conflicts++;
       }
       const arr=Math.round(cum);
       const etaMins=etaToMinutes(o.eta);
-      const late=arr>etaMins&&etaMins<23*60;
+      const late=arr>etaMins&&isFinite(etaMins);
       if(late) lateCount++;
-      // Earliness: minutes before ETA (skip "As per customer" ETAs = 23:59)
-      if(!late&&etaMins<23*60) totalEarlyMins+=Math.max(0,etaMins-arr);
+      // Earliness: minutes before ETA (skip "As per customer" which have no deadline)
+      if(!late&&isFinite(etaMins)) totalEarlyMins+=Math.max(0,etaMins-arr);
+      const zone2=getZone(o.lat,o.lon);
+      const conflict=s.noEntry&&(zone2==='Delhi'||zone2==='Gurgaon')&&isNoEntry(zone2,arr);
+      if(conflict) conflicts++;
       cum+=s.unloadingMin;
       pl=o.lat;plo=o.lon;
-      return{...o,arrivalMins:arr,arrivalTime:minutesToTime(arr),conflict,late,stopNum:i+1,dist:Math.round(dist*10)/10,zone};
+      return{...o,arrivalMins:arr,arrivalTime:minutesToTime(arr),conflict,late,stopNum:i+1,dist:Math.round(dist*10)/10,zone:zone2};
     });
     return{stops,conflicts,lateCount,totalEarlyMins,dispMins};
   }
@@ -743,6 +798,7 @@ function buildRouteFromCluster(cluster,s,isOutstation){
   const dispatchMins=best.dispMins;
   const stopsWithTime=best.stops;
   const hasConflict=stopsWithTime.some(s=>s.conflict);
+  const hasLate=stopsWithTime.some(s=>s.late);
 
   const lastStop=stopsWithTime[stopsWithTime.length-1];
   const lastArrival=lastStop.arrivalMins+s.unloadingMin;
@@ -754,7 +810,7 @@ function buildRouteFromCluster(cluster,s,isOutstation){
     id:Math.random().toString(36).slice(2),
     stops:stopsWithTime,
     totalWeight:Math.round(totalWeight),
-    totalDistKm:Math.round(totalDistKm*rf),
+    totalDistKm:Math.round(totalDistKm),
     vehicle,
     isOutstation,
     dispatchMins:Math.round(dispatchMins),
@@ -763,6 +819,7 @@ function buildRouteFromCluster(cluster,s,isOutstation){
     returnTime:minutesToTime(Math.round(returnMins)),
     totalRouteMins:Math.round(totalRouteMins),
     hasConflict,
+    hasLate,
     zones
   };
 }
@@ -796,7 +853,7 @@ function nearestNeighbourFrom(stops,startLat,startLon){
 function etaSortedNeighbour(stops){
   function bucket(stop){
     const eta=etaToMinutes(stop.eta);
-    if(eta>=23*60+59) return 3; // "As per customer" → last
+    if(!isFinite(eta)) return 3; // "As per customer" → last
     if(eta<12*60)     return 0; // morning  : before noon
     if(eta<17*60)     return 1; // afternoon: noon–5 PM
     return 2;                    // evening  : after 5 PM
@@ -820,7 +877,7 @@ function etaSortedNeighbour(stops){
 // ═══════════════════════════════════════════════
 function handleDrag(e,on){e.preventDefault();document.getElementById('upload-zone').classList.toggle('drag',on);}
 function handleDrop(e){e.preventDefault();document.getElementById('upload-zone').classList.remove('drag');const f=e.dataTransfer.files[0];if(f) parseCSV(f);}
-function handleFile(e){const f=e.target.files[0];if(f) parseCSV(f);e.target.value='';}
+function handleFile(e){const f=e.target.files[0];if(f) parseCSV(f);}
 
 function loadSampleData(){
   const sample=`outlet name,weight\nAmicus Natural Products Private Limited (Gole Market),45\nAmicus Natural Products Private Limited (Vikas Puri),30\nAmicus Natural Products Private Limited GTB Nagar,25\nBURMAN HOSPITALITY PRIVATE LIMITED (D21),80\nBURMAN HOSPITALITY PRIVATE LIMITED (Epica/Moti Nagar),60\nBURMAN HOSPITALITY PRIVATE LIMITED (Kalka Ji),40\nCompass India Food Services Private Limited (GOOGLE-SIGB),120\nCompass India Food Services Private Limited (CPU GGN),90\nDANA CHOGA (SEC-14),35\nDANA CHOGA (SEC-22),40\nDANA CHOGA (SEC-54),28\nDevyani International Limited (088),22\nDevyani International Limited (127),18\nDevyani International Limited (243),25\nDevyani International Limited (P321),30\nEVERSUB INDIA PRIVATE LIMITED (Botanical Garden),15\nEVERSUB INDIA PRIVATE LIMITED (Sector 18 Noida),20\nEVERSUB INDIA PRIVATE LIMITED (Logix Cyber Park),18\nHaldiram Snacks Private Limited,200\nTajsats Air Catering Ltd (Delhi),150\nOBEROI FLIGHT SERVICES-DL,80\nRebel Foods Private Limited (NAC Chandigarh),50\nEVERSUB INDIA PRIVATE LIMITED - Karnal Haveli Haryana,35`;
@@ -833,88 +890,47 @@ let parsedOrders=[];
 function parseCSV(file,name){
   const reader=new FileReader();
   reader.onload=function(e){
-    let data;
-    try{
-      const wb=XLSX.read(e.target.result,{type:'array'});
-      const ws=wb.Sheets[wb.SheetNames[0]];
-      data=XLSX.utils.sheet_to_json(ws,{header:1,defval:''});
-    }catch(err){
-      alert('Could not parse file: '+err.message);
-      return;
-    }
-    if(!data||data.length<2){alert('File appears empty or has no data rows.');return;}
-    const headers=data[0].map(h=>String(h).toLowerCase().trim());
+    const lines=e.target.result.split('\n').filter(l=>l.trim());
+    const headers=lines[0].toLowerCase().split(',').map(h=>h.trim());
     const nameCol=headers.findIndex(h=>h.includes('outlet')||h.includes('name'));
     const weightCol=headers.findIndex(h=>h.includes('weight'));
-    if(nameCol<0||weightCol<0){alert('File must have "outlet name" and "weight" columns');return;}
+    if(nameCol<0||weightCol<0){alert('CSV must have "outlet name" and "weight" columns');return;}
     parsedOrders=[];
-    const excluded=[];
     const tbody=document.getElementById('preview-body');
     tbody.innerHTML='';
-    let matched=0,unmatched=0,totalUploadedW=0,matchedW=0;
-    for(let i=1;i<data.length;i++){
-      const row=data[i];
-      const outletName=String(row[nameCol]||'').trim();
-      const rawW=row[weightCol];
-      const weight=parseFloat(rawW);
-      if(!outletName){excluded.push({name:'(blank row)',weight:'-',reason:'Empty outlet name'});continue;}
-      if(isNaN(weight)||weight<=0){excluded.push({name:outletName,weight:rawW||'-',reason:'Invalid or zero weight'});continue;}
-      totalUploadedW+=weight;
+    let matched=0,unmatched=0;
+    for(let i=1;i<lines.length;i++){
+      const cols=lines[i].split(',').map(c=>c.trim().replace(/^"|"$/g,''));
+      if(!cols[nameCol]||!cols[weightCol]) continue;
+      const outletName=cols[nameCol];
+      const weight=parseFloat(cols[weightCol]);
+      if(isNaN(weight)) continue;
       const masterMatch=fuzzyMatch(outletName);
       const dist=masterMatch?Math.round(haversine(WH.lat,WH.lon,masterMatch.lat,masterMatch.lon)):null;
       const zone=masterMatch?getZone(masterMatch.lat,masterMatch.lon):'-';
-      if(!masterMatch){
-        unmatched++;
-        excluded.push({name:outletName,weight,reason:'No matching outlet in master data'});
-      } else {
-        const tr=document.createElement('tr');
-        tr.innerHTML=`
-          <td>${outletName}</td>
-          <td class="match-ok">${masterMatch.name}</td>
-          <td>${weight.toFixed(2)} kg</td>
-          <td>${masterMatch.eta}</td>
-          <td><span class="badge ${zone==='Outstation'?'badge-outstation':'badge-ncr'}">${zone}</span></td>
-          <td>${dist?dist+' km':'-'}</td>`;
-        tbody.appendChild(tr);
-        matched++;matchedW+=weight;
-        parsedOrders.push({...masterMatch,weight,uploadedName:outletName});
-      }
+      const tr=document.createElement('tr');
+      if(!masterMatch) tr.className='unmatched';
+      tr.innerHTML=`
+        <td>${outletName}</td>
+        <td class="${masterMatch?'match-ok':'match-fail'}">${masterMatch?masterMatch.name:'⚠ No match found'}</td>
+        <td>${parseFloat(weight).toFixed(2)} kg</td>
+        <td>${masterMatch?masterMatch.eta:'-'}</td>
+        <td><span class="badge ${zone==='Outstation'?'badge-outstation':'badge-ncr'}">${zone}</span></td>
+        <td>${dist?dist+' km':'-'}</td>`;
+      tbody.appendChild(tr);
+      if(masterMatch){matched++;parsedOrders.push({...masterMatch,weight,uploadedName:outletName});}
+      else unmatched++;
     }
     document.getElementById('upload-result').style.display='block';
     document.getElementById('match-summary').textContent=`${matched} matched, ${unmatched} unmatched`;
-    renderExcludedSection(excluded);
-    const weightNote=totalUploadedW>matchedW?`<div style="font-size:10px;color:var(--text-muted);margin-top:2px">of ${totalUploadedW.toFixed(2)} kg uploaded</div>`:'';
+    const totalW=parsedOrders.reduce((s,o)=>s+o.weight,0);
     document.getElementById('upload-stats').innerHTML=`
       <div class="stat"><div class="stat-label">Total orders</div><div class="stat-value">${matched+unmatched}</div></div>
       <div class="stat"><div class="stat-label">Matched</div><div class="stat-value" style="color:var(--green)">${matched}</div></div>
-      <div class="stat"><div class="stat-label">Excluded</div><div class="stat-value" style="color:${excluded.length?'var(--red)':'var(--green)'}">${excluded.length}</div></div>
-      <div class="stat"><div class="stat-label">Matched weight</div><div class="stat-value">${matchedW.toFixed(2)} kg${weightNote}</div></div>`;
+      <div class="stat"><div class="stat-label">Unmatched</div><div class="stat-value" style="color:${unmatched?'var(--red)':'var(--green)'}">${unmatched}</div></div>
+      <div class="stat"><div class="stat-label">Total weight</div><div class="stat-value">${totalW.toFixed(2)} kg</div></div>`;
   };
-  reader.readAsArrayBuffer(file);
-}
-
-function renderExcludedSection(excluded){
-  let el=document.getElementById('excluded-section');
-  if(!el){
-    el=document.createElement('div');
-    el.id='excluded-section';
-    el.style.marginBottom='16px';
-    document.getElementById('upload-result').appendChild(el);
-  }
-  if(!excluded.length){el.innerHTML='';return;}
-  el.innerHTML=`
-    <div class="card">
-      <div class="section-header" style="margin-bottom:10px">
-        <div class="section-title" style="font-size:14px;color:var(--red)">⚠ Excluded from Routing (${excluded.length})</div>
-        <span style="font-size:11px;color:var(--text-muted)">These rows were not routed. Fix and re-upload to include them.</span>
-      </div>
-      <div class="scroll-x">
-        <table class="preview-table">
-          <thead><tr><th>Outlet Name (from order)</th><th>Weight</th><th>Reason Excluded</th></tr></thead>
-          <tbody>${excluded.map(e=>`<tr><td>${e.name}</td><td>${typeof e.weight==='number'?e.weight.toFixed(2)+' kg':e.weight}</td><td class="match-fail">${e.reason}</td></tr>`).join('')}</tbody>
-        </table>
-      </div>
-    </div>`;
+  reader.readAsText(file);
 }
 
 function generateRoutes(){
@@ -941,11 +957,12 @@ function renderRoutesPage(){
   const totalW=generatedRoutes.reduce((s,r)=>s+r.totalWeight,0);
   const outst=generatedRoutes.filter(r=>r.isOutstation).length;
   const conflicts=generatedRoutes.filter(r=>r.hasConflict).length;
+  const lateRoutes=generatedRoutes.filter(r=>r.hasLate).length;
   document.getElementById('route-summary-stats').innerHTML=`
     <div class="stat"><div class="stat-label">Total routes</div><div class="stat-value">${generatedRoutes.length}</div></div>
     <div class="stat"><div class="stat-label">Total stops</div><div class="stat-value">${total}</div></div>
     <div class="stat"><div class="stat-label">Total weight</div><div class="stat-value">${totalW.toFixed(2)} kg</div></div>
-    <div class="stat"><div class="stat-label">Outstation routes</div><div class="stat-value" style="color:${outst?'var(--amber)':'var(--green)'}">${outst}</div>${conflicts?`<div class="stat-sub">${conflicts} with scheduling conflicts</div>`:''}`;
+    <div class="stat"><div class="stat-label">Outstation routes</div><div class="stat-value" style="color:${outst?'var(--amber)':'var(--green)'}">${outst}</div>${conflicts?`<div class="stat-sub" style="color:var(--amber)">⚠ ${conflicts} scheduling conflict${conflicts>1?'s':''}</div>`:''}${lateRoutes?`<div class="stat-sub" style="color:var(--red)">⚠ ${lateRoutes} route${lateRoutes>1?'s':''} with late arrivals</div>`:''}`;
   document.getElementById('routes-page-sub').textContent=`${generatedRoutes.length} routes optimised · ${total} stops covered`;
   renderRouteCards();
 }
@@ -958,21 +975,20 @@ function renderRouteCards(){
   let filtered=generatedRoutes;
   if(fv) filtered=filtered.filter(r=>r.vehicle===fv);
   if(fz) filtered=filtered.filter(r=>r.zones.includes(fz)||fz==='Outstation'&&r.isOutstation);
-  if(fc) filtered=filtered.filter(r=>r.hasConflict);
+  if(fc) filtered=filtered.filter(r=>r.hasConflict||r.hasLate);
   const grid=document.getElementById('routes-grid');
   grid.innerHTML='';
-  filtered.forEach((r)=>{
-    const routeNum=generatedRoutes.indexOf(r)+1;
+  filtered.forEach((r,i)=>{
     const div=document.createElement('div');
     div.className='route-card';
-    div.onclick=()=>openRouteModal(r,routeNum-1);
+    div.onclick=()=>openRouteModal(r,i);
     const zoneStr=r.zones.join(', ');
     const hours=Math.floor(r.totalRouteMins/60),mins=r.totalRouteMins%60;
     const isOvertime=r.totalRouteMins>s.maxHours*60;
     const durationStyle=isOvertime?'color:var(--amber);font-weight:600':'';
     div.innerHTML=`
       <div class="route-card-header">
-        <div class="route-number">Route ${routeNum}</div>
+        <div class="route-number">Route ${i+1}</div>
         <div style="display:flex;gap:6px;align-items:center">
           ${r.isOutstation?'<span class="badge badge-outstation">Outstation</span>':''}
           ${isOvertime?'<span class="badge" style="background:#fef3c7;color:#92400e">⚡OT</span>':''}
@@ -991,6 +1007,7 @@ function renderRouteCards(){
         <div class="route-stops-preview">
           ${r.zones.map(z=>`<span class="badge badge-ncr" style="margin-right:3px">${z}</span>`).join('')}
           ${r.hasConflict?'<span class="warning-badge">⚠ Scheduling conflict</span>':''}
+          ${r.hasLate?'<span class="warning-badge" style="background:#fee2e2;color:#991b1b">⚠ Late arrivals</span>':''}
           <div style="margin-top:4px">${r.stops.slice(0,2).map(s=>s.name).join(' → ')}${r.stops.length>2?` → +${r.stops.length-2} more`:''}</div>
         </div>
       </div>`;
@@ -1003,7 +1020,6 @@ function renderRouteCards(){
 //  MODAL
 // ═══════════════════════════════════════════════
 function openRouteModal(route,idx){
-  window._openRoute=route;
   currentRouteIdx=idx;
   const settings=getSettings();
   document.getElementById('modal-title').textContent=`Route ${idx+1} — ${route.vehicle}${route.isOutstation?' (Outstation)':''}`;
@@ -1013,13 +1029,13 @@ function openRouteModal(route,idx){
   const overtimeTag=isOvertime?` <span style="font-size:11px;background:var(--amber-light);color:var(--amber);padding:1px 5px;border-radius:3px">⚡ Overtime</span>`:'';
   document.getElementById('modal-stats').innerHTML=`
     <div class="stat"><div class="stat-label">Dispatch time</div><div class="stat-value">${route.dispatchTime}</div></div>
-    <div class="stat"><div class="stat-label">Total distance</div><div class="stat-value">${route.totalDistKm} km<div style="font-size:10px;color:var(--text-muted);margin-top:1px">road estimate</div></div></div>
+    <div class="stat"><div class="stat-label">Total distance</div><div class="stat-value">${route.totalDistKm} km<div style="font-size:10px;color:var(--text-muted);margin-top:1px">aerial estimate</div></div></div>
     <div class="stat"><div class="stat-label">Total weight</div><div class="stat-value">${route.totalWeight} kg</div></div>
     <div class="stat"><div class="stat-label">Est. duration</div><div class="stat-value" style="${durationStyle}">${hours}h ${mins}m${overtimeTag}</div></div>`;
   // Stop list
   const ul=document.getElementById('modal-stops');
   ul.innerHTML='';
-  let cumW=route.stops.reduce((a,o)=>a+o.weight,0);
+  let cumW=route.totalWeight;
   const speed=route.isOutstation?settings.highwaySpeed:settings.citySpeed;
   // Add warehouse as origin for distance calc
   const prevPoints=[{lat:WH.lat,lon:WH.lon,name:'Warehouse'},...route.stops];
@@ -1027,9 +1043,9 @@ function openRouteModal(route,idx){
     const s=route.stops[si];
     cumW-=s.weight;
     const prev=prevPoints[si];
-    const distFromPrev=Math.round(haversine(prev.lat,prev.lon,s.lat,s.lon)*100)/100;
+    const distFromPrev=(Math.round(haversine(prev.lat,prev.lon,s.lat,s.lon)*100)/100).toFixed(2);
     const distFromWH=(Math.round(haversine(WH.lat,WH.lon,s.lat,s.lon)*100)/100).toFixed(2);
-    const fromLabel=si===0?`${distFromPrev.toFixed(2)} km from warehouse`:`${distFromPrev.toFixed(2)} km from stop ${si}`;
+    const fromLabel=si===0?`${distFromPrev} km from warehouse`:`${distFromPrev} km from stop ${si}`;
     const travelMins=Math.round((distFromPrev*(route.isOutstation?ROAD_HWY:ROAD_CITY)/speed)*60);
     const departMins=s.arrivalMins+settings.unloadingMin;
     const departTime=minutesToTime(departMins);
@@ -1037,7 +1053,7 @@ function openRouteModal(route,idx){
     if(si>0){
       const conn=document.createElement('div');
       conn.style.cssText='display:flex;align-items:center;gap:8px;padding:2px 0 2px 11px;color:var(--text-muted)';
-      conn.innerHTML=`<div style="width:1px;height:20px;background:var(--gray-border);margin-left:10px;flex-shrink:0"></div><span style="font-size:11px;color:var(--text-muted)">↓ ${distFromPrev.toFixed(2)} km · ~${travelMins} min travel (after ${settings.unloadingMin} min unloading at stop ${si})</span>`;
+      conn.innerHTML=`<div style="width:1px;height:20px;background:var(--gray-border);margin-left:10px;flex-shrink:0"></div><span style="font-size:11px;color:var(--text-muted)">↓ ${distFromPrev} km · ~${travelMins} min travel (after ${settings.unloadingMin} min unloading at stop ${si})</span>`;
       ul.appendChild(conn);
     }
     const li=document.createElement('li');
@@ -1090,10 +1106,16 @@ function closeModal(){
 }
 
 function copyRouteForDriver(){
-  const rt=window._openRoute;
+  if(currentRouteIdx===null) return;
+  const r=generatedRoutes[currentRouteIdx]||generatedRoutes.find((_,i)=>i===currentRouteIdx);
+  // Find the route in filtered list
+  const route=generatedRoutes.find((rt,i)=>i===currentRouteIdx)||generatedRoutes[currentRouteIdx];
+  // Use modal title to find route
+  const titleEl=document.getElementById('modal-title').textContent;
+  const idx=parseInt(titleEl.match(/Route (\d+)/)?.[1]||'1')-1;
+  const rt=generatedRoutes[idx]||generatedRoutes[currentRouteIdx];
   if(!rt) return;
-  const routeNum=generatedRoutes.indexOf(rt)+1||1;
-  let text=`🌿 URBAN HARVEST — ROUTE ${routeNum}\n`;
+  let text=`🌿 URBAN HARVEST — ROUTE ${idx+1}\n`;
   text+=`Vehicle: ${rt.vehicle} | Dispatch: ${rt.dispatchTime}\n`;
   text+=`Total: ${rt.stops.length} stops | ${rt.totalWeight}kg | ${rt.totalDistKm}km\n\n`;
   text+=`📍 DROP SEQUENCE:\n`;
@@ -1120,7 +1142,6 @@ function populateOpsTable(){
   document.getElementById('ops-table-wrap').style.display='block';
   generatedRoutes.forEach((r,i)=>{
     const tr=document.createElement('tr');
-    tr.id=`ops-main-row-${i}`;
     tr.innerHTML=`
       <td style="font-weight:500">Route ${i+1}<br><span style="font-size:10px;color:var(--text-muted)">${r.stops.length} stops · ${r.totalWeight}kg</span></td>
       <td><span class="vehicle-badge ${vehicleBadgeClass(r.vehicle)}">${r.vehicle}</span></td>
@@ -1131,11 +1152,11 @@ function populateOpsTable(){
           <option>TATA 407</option><option>14FT</option><option>Other</option>
         </select>
       </td>
-      <td><input type="number" min="1" max="9" value="1" id="ops-numv-${i}" style="width:60px;text-align:center" oninput="updateExtraVehicleRows(${i},+this.value)"/></td>
-      <td><input type="text" placeholder="e.g. DL01AB1234" id="ops-vno-${i}-1"/></td>
-      <td><input type="text" placeholder="Driver name" id="ops-dname-${i}-1"/></td>
-      <td><input type="tel" placeholder="10-digit mobile" maxlength="10" id="ops-dnum-${i}-1" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"/></td>
-      <td><input type="text" placeholder="Partner name" id="ops-tp-${i}-1"/></td>
+      <td><input type="number" min="1" max="9" value="1" id="ops-numv-${i}" style="width:60px;text-align:center"/></td>
+      <td><input type="text" placeholder="e.g. DL01AB1234" id="ops-vno-${i}"/></td>
+      <td><input type="text" placeholder="Driver name" id="ops-dname-${i}"/></td>
+      <td><input type="text" placeholder="+91 XXXXXXXX" id="ops-dnum-${i}"/></td>
+      <td><input type="text" placeholder="Partner name" id="ops-tp-${i}"/></td>
       <td style="font-weight:500;color:var(--green)">${r.dispatchTime}</td>
       <td><input type="time" id="ops-adispatch-${i}"/></td>
       <td><input type="time" id="ops-return-${i}"/></td>
@@ -1144,44 +1165,18 @@ function populateOpsTable(){
   });
 }
 
-function updateExtraVehicleRows(routeIdx,count){
-  document.querySelectorAll(`[data-extra-v="${routeIdx}"]`).forEach(r=>r.remove());
-  const anchor=document.getElementById(`ops-main-row-${routeIdx}`);
-  if(!anchor) return;
-  for(let v=2;v<=Math.min(count,9);v++){
-    const tr=document.createElement('tr');
-    tr.setAttribute('data-extra-v',routeIdx);
-    tr.style.background='var(--gray-light)';
-    tr.innerHTML=`
-      <td colspan="3" style="font-size:11px;color:var(--text-muted);padding-left:20px;border-right:none">Vehicle ${v}</td>
-      <td style="border-left:none"></td>
-      <td><input type="text" placeholder="e.g. DL01AB1234" id="ops-vno-${routeIdx}-${v}"/></td>
-      <td><input type="text" placeholder="Driver name" id="ops-dname-${routeIdx}-${v}"/></td>
-      <td><input type="tel" placeholder="10-digit mobile" maxlength="10" id="ops-dnum-${routeIdx}-${v}" oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)"/></td>
-      <td><input type="text" placeholder="Partner name" id="ops-tp-${routeIdx}-${v}"/></td>
-      <td colspan="4"></td>`;
-    // Insert after last extra row (or after main row)
-    const allExtra=document.querySelectorAll(`[data-extra-v="${routeIdx}"]`);
-    const insertAfter=allExtra.length>0?allExtra[allExtra.length-1]:anchor;
-    insertAfter.insertAdjacentElement('afterend',tr);
-  }
-}
-
 // ═══════════════════════════════════════════════
 //  EXCEL EXPORT
 // ═══════════════════════════════════════════════
 function exportExcel(){
   if(!generatedRoutes.length){alert('No routes to export');return;}
   const s=getSettings();
-  const today=new Date();
-  const dateStr=today.toLocaleDateString('en-GB'); // DD/MM/YYYY
-  const fileDateStr=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  const rows=[['Date','Warehouse','Route','Vehicle','Stop #','Outlet Name','Zone','Weight (kg)','ETA','Est. Arrival','Est. Depart','Dist from prev (km)','Total Route Weight','Total Distance (km)','Dispatch Time','Return Time','No-Entry Conflict']];
+  const rows=[['Route','Vehicle','Stop #','Outlet Name','Zone','Weight (kg)','ETA','Est. Arrival','Est. Depart','Dist from prev (km)','Total Route Weight','Total Distance (km)','Dispatch Time','Return Time','No-Entry Conflict']];
   generatedRoutes.forEach((r,i)=>{
     r.stops.forEach((stop,j)=>{
       const departTime=minutesToTime(stop.arrivalMins+s.unloadingMin);
       rows.push([
-        dateStr,'UH-Rai',`Route ${i+1}`,r.vehicle,j+1,stop.name,
+        `Route ${i+1}`,r.vehicle,j+1,stop.name,
         stop.zone||getZone(stop.lat,stop.lon),stop.weight,stop.eta,stop.arrivalTime,departTime,stop.dist||'',
         j===0?r.totalWeight:'',j===0?r.totalDistKm:'',
         j===0?r.dispatchTime:'',j===0?r.returnTime:'',
@@ -1192,29 +1187,26 @@ function exportExcel(){
   });
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:12},{wch:12},{wch:10},{wch:10},{wch:7},{wch:45},{wch:12},{wch:12},{wch:14},{wch:12},{wch:12},{wch:16},{wch:18},{wch:18},{wch:14},{wch:12},{wch:16}];
+  ws['!cols']=[{wch:10},{wch:10},{wch:7},{wch:45},{wch:12},{wch:12},{wch:14},{wch:12},{wch:12},{wch:16},{wch:18},{wch:18},{wch:14},{wch:12},{wch:16}];
   XLSX.utils.book_append_sheet(wb,ws,'Routes');
-  XLSX.writeFile(wb,`UrbanHarvest_Routes_${fileDateStr}.xlsx`);
+  XLSX.writeFile(wb,'UrbanHarvest_Routes.xlsx');
   showToast('Excel exported!');
 }
 
 function exportOpsExcel(){
   if(!generatedRoutes.length){alert('No operations data');return;}
-  const today=new Date();
-  const dateStr=today.toLocaleDateString('en-GB'); // DD/MM/YYYY
-  const fileDateStr=`${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  const rows=[['Date','Route','Stops','Weight (kg)','Planned Vehicle','Actual Vehicle Type','No. of Vehicles','Vehicle No.','Driver Name','Driver No.','Transport Partner','Planned Dispatch','Actual Dispatch','Return Time','Notes']];
+  const rows=[['Route','Stops','Weight (kg)','Planned Vehicle','Actual Vehicle Type','No. of Vehicles','Vehicle No.','Driver Name','Driver No.','Transport Partner','Planned Dispatch','Actual Dispatch','Return Time','Notes']];
   generatedRoutes.forEach((r,i)=>{
     const avtypeEl=document.getElementById(`ops-avtype-${i}`);
     const avtypeVal=avtypeEl?.value||'';
     rows.push([
-      dateStr,`Route ${i+1}`,r.stops.length,r.totalWeight,r.vehicle,
+      `Route ${i+1}`,r.stops.length,r.totalWeight,r.vehicle,
       avtypeVal||r.vehicle,
       parseInt(document.getElementById(`ops-numv-${i}`)?.value||'1'),
-      document.getElementById(`ops-vno-${i}-1`)?.value||'',
-      document.getElementById(`ops-dname-${i}-1`)?.value||'',
-      document.getElementById(`ops-dnum-${i}-1`)?.value||'',
-      document.getElementById(`ops-tp-${i}-1`)?.value||'',
+      document.getElementById(`ops-vno-${i}`)?.value||'',
+      document.getElementById(`ops-dname-${i}`)?.value||'',
+      document.getElementById(`ops-dnum-${i}`)?.value||'',
+      document.getElementById(`ops-tp-${i}`)?.value||'',
       r.dispatchTime,
       document.getElementById(`ops-adispatch-${i}`)?.value||'',
       document.getElementById(`ops-return-${i}`)?.value||'',
@@ -1223,9 +1215,9 @@ function exportOpsExcel(){
   });
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(rows);
-  ws['!cols']=[{wch:12},{wch:10},{wch:7},{wch:12},{wch:16},{wch:18},{wch:14},{wch:16},{wch:18},{wch:16},{wch:18},{wch:16},{wch:16},{wch:14},{wch:30}];
+  ws['!cols']=[{wch:10},{wch:7},{wch:12},{wch:16},{wch:18},{wch:14},{wch:16},{wch:18},{wch:16},{wch:18},{wch:16},{wch:16},{wch:14},{wch:30}];
   XLSX.utils.book_append_sheet(wb,ws,'Operations');
-  XLSX.writeFile(wb,`UrbanHarvest_Ops_${fileDateStr}.xlsx`);
+  XLSX.writeFile(wb,'UrbanHarvest_Ops.xlsx');
   showToast('Ops log exported!');
 }
 
