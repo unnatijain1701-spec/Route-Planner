@@ -143,6 +143,16 @@ input[type=file]{display:none}
 /* COPY TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#0f172a;color:#fff;padding:10px 16px;border-radius:var(--radius);font-size:12px;z-index:9999;opacity:0;transform:translateY(8px);transition:all .2s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
+
+  /* Vehicle-limits toggle switch */
+  .vl-toggle{position:relative;display:inline-block;width:30px;height:17px;vertical-align:middle;margin-right:5px;flex-shrink:0}
+  .vl-toggle input{opacity:0;width:0;height:0;position:absolute}
+  .vl-slider{position:absolute;cursor:pointer;inset:0;background:#d1d5db;border-radius:17px;transition:.2s}
+  .vl-slider:before{position:absolute;content:"";height:11px;width:11px;left:3px;bottom:3px;background:#fff;border-radius:50%;transition:.2s;box-shadow:0 1px 2px rgba(0,0,0,.2)}
+  .vl-toggle input:checked+.vl-slider{background:#22c55e}
+  .vl-toggle input:checked+.vl-slider:before{transform:translateX(13px)}
+  .vl-toggle input:disabled+.vl-slider{opacity:.45;cursor:not-allowed}
+  .vl-inp-wrap{display:flex;align-items:center;gap:4px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -329,47 +339,63 @@ input[type=file]{display:none}
 
   <div class="card" style="margin-top:16px">
     <div style="font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text-muted)">VEHICLE LIMITS</div>
-    <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">Per-vehicle caps on drop points and route distance. The tighter of this limit and the global max distance setting above will apply.</div>
+    <div style="font-size:11px;color:var(--text-muted);margin-bottom:12px">Per-vehicle caps on drop points and route distance. Toggle each limit on/off individually or use the column header toggle to disable all at once. The tighter of this limit and the global max distance setting applies.</div>
     <div class="scroll-x">
       <table class="preview-table" style="font-size:12px">
         <thead>
           <tr>
             <th>Vehicle</th>
             <th>Max Load (kg)</th>
-            <th>Max Drop Points</th>
-            <th>Max Route Distance (km)</th>
+            <th style="white-space:nowrap">
+              <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+                <label class="vl-toggle" title="Enable drop-point limits for ALL vehicles">
+                  <input type="checkbox" id="vl-all-stops-en" checked onchange="vlToggleAll(this,'stops')">
+                  <span class="vl-slider"></span>
+                </label>
+                Max Drop Points
+              </div>
+            </th>
+            <th style="white-space:nowrap">
+              <div style="display:flex;align-items:center;justify-content:center;gap:6px">
+                <label class="vl-toggle" title="Enable distance limits for ALL vehicles">
+                  <input type="checkbox" id="vl-all-dist-en" checked onchange="vlToggleAll(this,'dist')">
+                  <span class="vl-slider"></span>
+                </label>
+                Max Route Distance (km)
+              </div>
+            </th>
           </tr>
         </thead>
         <tbody>
           <tr>
             <td><span class="vehicle-badge v-ev450">EV450</span></td>
             <td style="color:var(--text-muted)">≤ 150 kg</td>
-            <td><input type="number" id="vl-ev450-stops" value="8" min="1" max="50" style="width:70px;text-align:center;padding:4px"/> stops</td>
-            <td><input type="number" id="vl-ev450-dist" value="80" min="10" max="500" style="width:80px;text-align:center;padding:4px"/> km</td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable drop-point limit for EV450"><input type="checkbox" id="vl-ev450-stops-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-ev450-stops" value="8" min="1" max="50" style="width:65px;text-align:center;padding:4px"/> stops</div></td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable distance limit for EV450"><input type="checkbox" id="vl-ev450-dist-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-ev450-dist" value="80" min="10" max="500" style="width:75px;text-align:center;padding:4px"/> km</div></td>
           </tr>
           <tr>
             <td><span class="vehicle-badge v-ace">ACE</span></td>
             <td style="color:var(--text-muted)">≤ 500 kg</td>
-            <td><input type="number" id="vl-ace-stops" value="15" min="1" max="50" style="width:70px;text-align:center;padding:4px"/> stops</td>
-            <td><input type="number" id="vl-ace-dist" value="120" min="10" max="500" style="width:80px;text-align:center;padding:4px"/> km</td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable drop-point limit for ACE"><input type="checkbox" id="vl-ace-stops-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-ace-stops" value="15" min="1" max="50" style="width:65px;text-align:center;padding:4px"/> stops</div></td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable distance limit for ACE"><input type="checkbox" id="vl-ace-dist-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-ace-dist" value="120" min="10" max="500" style="width:75px;text-align:center;padding:4px"/> km</div></td>
           </tr>
           <tr>
             <td><span class="vehicle-badge v-bolero">Bolero</span></td>
             <td style="color:var(--text-muted)">≤ 1,000 kg</td>
-            <td><input type="number" id="vl-bolero-stops" value="20" min="1" max="60" style="width:70px;text-align:center;padding:4px"/> stops</td>
-            <td><input type="number" id="vl-bolero-dist" value="200" min="10" max="500" style="width:80px;text-align:center;padding:4px"/> km</td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable drop-point limit for Bolero"><input type="checkbox" id="vl-bolero-stops-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-bolero-stops" value="20" min="1" max="60" style="width:65px;text-align:center;padding:4px"/> stops</div></td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable distance limit for Bolero"><input type="checkbox" id="vl-bolero-dist-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-bolero-dist" value="200" min="10" max="500" style="width:75px;text-align:center;padding:4px"/> km</div></td>
           </tr>
           <tr>
             <td><span class="vehicle-badge v-tata407">TATA 407</span></td>
             <td style="color:var(--text-muted)">≤ 2,499 kg</td>
-            <td><input type="number" id="vl-tata407-stops" value="30" min="1" max="80" style="width:70px;text-align:center;padding:4px"/> stops</td>
-            <td><input type="number" id="vl-tata407-dist" value="300" min="10" max="600" style="width:80px;text-align:center;padding:4px"/> km</td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable drop-point limit for TATA 407"><input type="checkbox" id="vl-tata407-stops-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-tata407-stops" value="30" min="1" max="80" style="width:65px;text-align:center;padding:4px"/> stops</div></td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable distance limit for TATA 407"><input type="checkbox" id="vl-tata407-dist-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-tata407-dist" value="300" min="10" max="600" style="width:75px;text-align:center;padding:4px"/> km</div></td>
           </tr>
           <tr>
             <td><span class="vehicle-badge v-14ft">14FT</span></td>
             <td style="color:var(--text-muted)">≤ 3,500 kg</td>
-            <td><input type="number" id="vl-14ft-stops" value="50" min="1" max="100" style="width:70px;text-align:center;padding:4px"/> stops</td>
-            <td><input type="number" id="vl-14ft-dist" value="500" min="10" max="1000" style="width:80px;text-align:center;padding:4px"/> km</td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable drop-point limit for 14FT"><input type="checkbox" id="vl-14ft-stops-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-14ft-stops" value="50" min="1" max="100" style="width:65px;text-align:center;padding:4px"/> stops</div></td>
+            <td><div class="vl-inp-wrap"><label class="vl-toggle" title="Enable distance limit for 14FT"><input type="checkbox" id="vl-14ft-dist-en" checked onchange="vlToggle(this)"><span class="vl-slider"></span></label><input type="number" id="vl-14ft-dist" value="500" min="10" max="1000" style="width:75px;text-align:center;padding:4px"/> km</div></td>
           </tr>
         </tbody>
       </table>
@@ -550,10 +576,28 @@ function getVehicleLimits(vehicleType){
   const key=vehicleType.toLowerCase().replace(/[\s\/]/g,'');
   const stopsEl=document.getElementById(`vl-${key}-stops`);
   const distEl=document.getElementById(`vl-${key}-dist`);
+  const stopsEnEl=document.getElementById(`vl-${key}-stops-en`);
+  const distEnEl=document.getElementById(`vl-${key}-dist-en`);
+  const stopsOn=stopsEnEl?stopsEnEl.checked:true;
+  const distOn=distEnEl?distEnEl.checked:true;
   return{
-    maxStops :stopsEl?Math.max(1,parseInt(stopsEl.value)||d.maxStops):d.maxStops,
-    maxDistKm:distEl ?Math.max(10,parseInt(distEl.value)||d.maxDistKm):d.maxDistKm,
+    maxStops :stopsOn&&stopsEl?Math.max(1,parseInt(stopsEl.value)||d.maxStops):99,
+    maxDistKm:distOn&&distEl ?Math.max(10,parseInt(distEl.value)||d.maxDistKm):999,
   };
+}
+function vlToggle(cb){
+  const id=cb.id.replace('-en','');
+  const inp=document.getElementById(id);
+  if(inp) inp.disabled=!cb.checked;
+}
+function vlToggleAll(masterCb,type){
+  ['ev450','ace','bolero','tata407','14ft'].forEach(k=>{
+    const togEl=document.getElementById(`vl-${k}-${type}-en`);
+    if(!togEl) return;
+    togEl.checked=masterCb.checked;
+    const inp=document.getElementById(`vl-${k}-${type}`);
+    if(inp) inp.disabled=!masterCb.checked;
+  });
 }
 function vehicleBadgeClass(v){
   const m={'EV450':'v-ev450','ACE':'v-ace','Bolero':'v-bolero','TATA 407':'v-tata407','14FT':'v-14ft','Outstation':'v-outstation'};
