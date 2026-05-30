@@ -587,9 +587,10 @@ function assignVehicle(weight){
   for(const t of tiers){
     if(weight<=t.max&&isVehicleAvailable(t.v)) return t.v;
   }
-  // All preferred tiers unavailable — return largest available as fallback
-  for(let i=tiers.length-1;i>=0;i--){
-    if(isVehicleAvailable(tiers[i].v)) return tiers[i].v;
+  // No available vehicle can carry this weight — return smallest that CAN physically
+  // carry it (even if marked unavailable today) to prevent >100% load utilisation
+  for(const t of tiers){
+    if(weight<=t.max) return t.v;
   }
   return '14FT';
 }
