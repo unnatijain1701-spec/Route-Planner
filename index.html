@@ -963,8 +963,8 @@ function buildRouteFromCluster(cluster,s,isOutstation){
   let best=null;
   for(let t=3*60;t<=22*60;t+=15){
     const sim=simulateDispatch(t);
-    // Score: eliminate conflicts first, then late arrivals, then minimise earliness (hours)
-    const score=sim.conflicts*1000+sim.lateCount*100+Math.round(sim.totalEarlyMins/60);
+    // Score: late arrivals are worst, then no-entry conflicts (waits that don't cause lateness), then earliness
+    const score=sim.lateCount*1000+sim.conflicts*100+Math.round(sim.totalEarlyMins/60);
     // On equal score prefer LATER dispatch (arrive closer to ETA rather than hours before)
     if(!best||score<best.score||(score===best.score&&t>best.dispMins)){
       best={...sim,score};
@@ -1221,15 +1221,6 @@ function generateInsights(routes,s){
       act:`document.getElementById('filter-conflict').checked=true;renderRouteCards()`});
   }
 
-  const otRts=routes.filter(r=>r.totalRouteMins>s.maxHours*60);
-  if(otRts.length){
-    const newVal=s.overtimeHours+1;
-    ins.push({type:'warning',
-      msg:`${otRts.length} route${otRts.length>1?'s':''} over ${s.maxHours}h driver limit`,
-      hint:`Overtime ceiling is ${s.overtimeHours}h`,
-      label:`Raise overtime → ${newVal}h`,
-      act:`quickSet('s-overtime-hours',${newVal})`});
-  }
 
   const evCnt=routes.filter(r=>r.vehicle==='EV450').length;
   if(evCnt>5){
