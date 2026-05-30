@@ -622,10 +622,20 @@ function vlToggle(cb){
 function vlToggleAvail(cb,key){
   const badge=document.getElementById(`vl-${key}-badge`);
   const row=cb.closest('tr');
-  if(badge) badge.style.opacity=cb.checked?'1':'0.35';
-  if(row){
-    row.querySelectorAll('input[type=number]').forEach(el=>el.style.opacity=cb.checked?'1':'0.35');
-  }
+  const on=cb.checked;
+  if(badge) badge.style.opacity=on?'1':'0.35';
+  if(row) row.querySelectorAll('input[type=number]').forEach(el=>{el.style.opacity=on?'1':'0.35';el.disabled=!on;});
+  // Turn off / restore per-vehicle limit toggles when availability changes
+  ['stops','dist'].forEach(type=>{
+    const togEl=document.getElementById(`vl-${key}-${type}-en`);
+    const inp=document.getElementById(`vl-${key}-${type}`);
+    if(togEl){
+      if(!on){ togEl._prev=togEl.checked; togEl.checked=false; }
+      else { togEl.checked=togEl._prev??true; }
+      togEl.disabled=!on;
+    }
+    if(inp) inp.disabled=!on;
+  });
 }
 function vlToggleAll(masterCb,type){
   ['ev450','ace','bolero','tata407','14ft'].forEach(k=>{
@@ -1399,10 +1409,11 @@ function openRouteModal(route,idx){
     const s=route.stops[si];
     cumW-=s.weight;
     const prev=prevPoints[si];
-    const distFromPrev=Math.round(haversine(prev.lat,prev.lon,s.lat,s.lon)*100)/100;
-    const distFromWH=(Math.round(haversine(WH.lat,WH.lon,s.lat,s.lon)*100)/100).toFixed(2);
+    const _stopRf=(s.zone||getZone(s.lat,s.lon))==='Outstation'?ROAD_HWY:ROAD_CITY;
+    const distFromPrev=Math.round(haversine(prev.lat,prev.lon,s.lat,s.lon)*_stopRf*100)/100;
+    const distFromWH=(Math.round(haversine(WH.lat,WH.lon,s.lat,s.lon)*_stopRf*100)/100).toFixed(2);
     const fromLabel=si===0?`${distFromPrev.toFixed(2)} km from warehouse`:`${distFromPrev.toFixed(2)} km from stop ${si}`;
-    const travelMins=Math.round((distFromPrev*(route.isOutstation?ROAD_HWY:ROAD_CITY)/speed)*60);
+    const travelMins=Math.round((distFromPrev/speed)*60);
     const departMins=s.arrivalMins+settings.unloadingMin;
     const departTime=minutesToTime(departMins);
     // Connector arrow between stops (shows travel time AFTER previous stop's unloading)
@@ -1446,14 +1457,30 @@ function initRouteMap(route){
   // Route line
   const latlngs=[[WH.lat,WH.lon],...route.stops.map(s=>[s.lat,s.lon]),[WH.lat,WH.lon]];
   L.polyline(latlngs,{color:'#2d9e62',weight:3,opacity:.7,dashArray:route.isOutstation?'6,4':null}).addTo(mapInstance);
-  // Stop markers
+  // Stop markers — offset duplicates so stacked stops are all visible
+  const coordCount={};
   route.stops.forEach((s,i)=>{
+    const key=`${s.lat.toFixed(5)},${s.lon.toFixed(5)}`;
+    coordCount[key]=(coordCount[key]||0)+1;
+  });
+  const coordIdx={};
+  route.stops.forEach((s,i)=>{
+    const key=`${s.lat.toFixed(5)},${s.lon.toFixed(5)}`;
+    coordIdx[key]=(coordIdx[key]||0);
+    const total=coordCount[key];
+    const idx=coordIdx[key]++;
+    // Spiral offset: evenly space duplicates in a small circle (~15m radius)
+    const angle=(2*Math.PI*idx)/Math.max(total,1);
+    const r=total>1?0.00015:0;
+    const lat=s.lat+r*Math.cos(angle);
+    const lon=s.lon+r*Math.sin(angle);
     const color=s.conflict?'#dc2626':s.late?'#d97706':'#1d4ed8';
     const icon=L.divIcon({className:'',html:`<div style="background:${color};color:#fff;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;border:2px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.3)">${i+1}</div>`,iconSize:[22,22],iconAnchor:[11,11]});
-    L.marker([s.lat,s.lon],{icon}).addTo(mapInstance).bindPopup(`<b>${i+1}. ${s.name}</b><br>Arrive: ${s.arrivalTime}<br>Weight: ${(+s.weight).toFixed(2)}kg`);
+    L.marker([lat,lon],{icon}).addTo(mapInstance).bindPopup(`<b>${i+1}. ${s.name}</b><br>Arrive: ${s.arrivalTime}<br>Weight: ${(+s.weight).toFixed(2)}kg`);
   });
   const bounds=L.latLngBounds(latlngs);
-  mapInstance.fitBounds(bounds,{padding:[20,20]});
+  mapInstance.invalidateSize();
+  mapInstance.fitBounds(bounds,{padding:[30,30]});
 }
 
 function closeModal(){
@@ -1470,7 +1497,8 @@ function copyRouteForDriver(){
   text+=`Total: ${rt.stops.length} stops | ${rt.totalWeight}kg | ${rt.totalDistKm}km\n\n`;
   text+=`📍 DROP SEQUENCE:\n`;
   rt.stops.forEach((s,i)=>{
-    text+=`${i+1}. ${s.name}\n   ETA: ${s.eta==='As per customer'?'Flexible':s.eta} | Arrive by: ${s.arrivalTime} | ${(+s.weight).toFixed(2)}kg\n`;
+    const mapsLink=`https://www.google.com/maps/search/?api=1&query=${s.lat},${s.lon}`;
+    text+=`${i+1}. ${s.name}\n   ETA: ${s.eta==='As per customer'?'Flexible':s.eta} | Arrive by: ${s.arrivalTime} | ${(+s.weight).toFixed(2)}kg\n   📍 ${mapsLink}\n`;
   });
   text+=`\n🏭 Return to warehouse by: ${rt.returnTime}`;
   navigator.clipboard.writeText(text).then(()=>showToast('Copied to clipboard!')).catch(()=>{});
